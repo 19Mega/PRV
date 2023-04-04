@@ -60,13 +60,12 @@ for i in range(1, 11):
     label = Label(frame, text="{}".format(datos[str(i)]["fecha"]), **label_style)
     label.pack(side=LEFT, fill=X)
 
+
+
+
 button_frame.pack(side=LEFT, fill=Y)
 
 # Ejecuta el bucle de eventos principal de tkinter
 root.mainloop()
-
-
-
-
 
 
