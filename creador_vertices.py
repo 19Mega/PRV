@@ -9,6 +9,7 @@ class Vertice:
         self.mode = "no_edit"  # Modo de edición/agregado (por defecto, agregado)
         self.x, self.y = None, None
         self.line = None
+        
         self.state_button = "OFF"
         self.mode_button = Button(root, text=f"Editor de Potreros: ", command=self.toggle_mode)
         self.mode_button.pack()
@@ -17,6 +18,11 @@ class Vertice:
         #self.load_button = Button(root, text="Cargar", command=self.load_lines)
         #self.load_button.pack()
         self.load_lines()
+        
+        canvas.bind("<Button-1>", self.start_line)
+        canvas.bind("<B1-Motion>", self.draw_line)
+        canvas.bind("<ButtonRelease-1>", self.stop_line)
+        canvas.bind("<Button-3>", self.delete_line)
 
     def start_line(self, event):
         if self.mode == "edit":
@@ -66,16 +72,12 @@ class Vertice:
         self.mode_button.config(text=f"Editor de Potreros: {self.state_button}")
 
 root = Tk()
+root.geometry("450x650")
 canvas = Canvas(root, width=450, height=650)
 canvas.pack()
 img = ImageTk.PhotoImage(Image.open("02Git/captura.jpg"))
 canvas.create_image(0, 0, anchor=NW, image=img)
 
 v = Vertice(canvas)
-
-canvas.bind("<Button-1>", v.start_line)
-canvas.bind("<B1-Motion>", v.draw_line)
-canvas.bind("<ButtonRelease-1>", v.stop_line)
-canvas.bind("<Button-3>", v.delete_line)
 
 root.mainloop()
