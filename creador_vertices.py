@@ -98,14 +98,10 @@ class Vertice:
             self.mode = "no_edit"
             self.state_button = "OFF"
             self.mode_button.configure(bg='gray20', fg='white')   
-            
-            
         else:
             self.mode = "edit"
             self.state_button = "ON"
             self.mode_button.configure(bg='green', fg='white')
-            
-            
         self.mode_button.config(text=f"Editor de Potreros: {self.state_button}")
 
 
