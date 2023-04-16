@@ -7,8 +7,9 @@ class App(tk.Frame): # hereda de la clase Frame
         super().__init__(master)
         self.master = master 
         self.pack()
-        
-        self.create_widgets() # creamos un widget con la funcion create_widgets()
+
+        # creamos un widget con la funcion create_widgets()
+        self.create_widgets() 
 
         # Inicializa variables para hacer numeros incrementales
         self.next_number = 1
@@ -22,10 +23,10 @@ class App(tk.Frame): # hereda de la clase Frame
 
         # Intenta cargar los datos previos del archivo JSON
         self.load_data()
-        
+
         # hasta aca ejecuta cuando creamos un objeto del tipo app
         # despues tiene las funciones que se actival al interactuar con la ventana
-        
+
 
     def create_widgets(self):
         # Coloca la ruta de la imagen manualmente
@@ -35,7 +36,7 @@ class App(tk.Frame): # hereda de la clase Frame
         self.image = Image.open(image_path)
         self.photo_image = ImageTk.PhotoImage(self.image)
 
-        # Crea un canvas del mismo tamaño que la imagen
+        # Crea un canvas del mismo tamaÃÂ±o que la imagen
         self.canvas = tk.Canvas(self, width=self.image.width, height=self.image.height)
         self.canvas.pack()
 
@@ -47,6 +48,12 @@ class App(tk.Frame): # hereda de la clase Frame
         self.number_button = tk.Button(self, text="Colocar numero", command=self.set_mode_number)
         self.line_button.pack(side="left")
         self.number_button.pack(side="left")
+
+        self.borrar_numeros_button = tk.Button(self, text="Borrar numeros", command=self.borrar_numeros)
+        self.borrar_numeros_button.pack(side="left")
+
+        self.borrar_lines_button = tk.Button(self, text="Borrar lineas", command=self.borrar_lines)
+        self.borrar_lines_button.pack(side="left")
 
         # Vincula eventos del mouse en el canvas
         self.canvas.bind("<Button-1>", self.canvas_left_click) # 
@@ -79,13 +86,13 @@ class App(tk.Frame): # hereda de la clase Frame
 
             # Dibuja el numero en la capa "numbers"
                                 #   ubicacion, texto, color, tag del archivo json
-            self.canvas.create_text(x, y, text=str(self.next_number), fill='white', tags="numbers")
-            
+            self.canvas.create_text(x, y, text=str(self.next_number), fill='white', tags="numbers", font=("Arial", 11))
+
             #test
             total_de_numeros = len(self.number_positions)
             print(total_de_numeros)
             print(self.number_positions)
-            
+
             self.next_number += 1
 
             # Guarda los datos
@@ -108,16 +115,15 @@ class App(tk.Frame): # hereda de la clase Frame
             if self.line:
                 self.canvas.delete(self.line)
 
-            # Crea una nueva lÃÂ­nea de 10px en las coordenadas del clic y release
+            # Crea una nueva lÃÂÃÂÃÂÃÂ­nea de 10px en las coordenadas del clic y release
             new_line = [(self.start_x, self.start_y), (x, y)]
             self.line = self.canvas.create_line(new_line, fill='white', width=3, tags="lines")
 
-            # Guarda la lÃÂ­nea en la lista
+            # Guarda la lÃÂÃÂÃÂÃÂ­nea en la lista
             self.lines.append(new_line)
 
             # Guarda los datos
             self.save_data()
-
 
     # self.canvas.bind("<B1-Motion>", self.canvas_left_drag)
     def canvas_left_drag(self, event):
@@ -134,8 +140,9 @@ class App(tk.Frame): # hereda de la clase Frame
             temp_line = [(self.start_x, self.start_y), (x, y)]
             self.line = self.canvas.create_line(temp_line, fill='skyblue', width=3, tags=("lines", "temp_line"))
 
+    # no se usa
     def clear_canvas(self):
-        # Borra todas las linea y nÃÂºmero del canvas y los listados internamente
+        # Borra todas las linea y numeros del canvas y los listados internamente
         self.canvas.delete("numbers")  # Borra todos los objetos de la capa "numbers"
         self.number_positions = []
         self.canvas.delete("lines")  # Borra todos los objetos de la capa "lines"
@@ -146,7 +153,7 @@ class App(tk.Frame): # hereda de la clase Frame
         self.canvas.delete("all")
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo_image)
 
-        # Guarda los datos vacÃÂ­os
+        # Guarda los datos vacios
         self.save_data()
 
     def load_data(self):
@@ -154,34 +161,17 @@ class App(tk.Frame): # hereda de la clase Frame
             # Si hay un archivo JSON, carga los datos previos
             with open("data.json", "r") as f:
                 data = json.load(f)
-                
-                print(f" self.number_positions Antes {self.number_positions}")
+
                 self.number_positions = data["numbers"]
-                print(f"self.number_positions Despues {self.number_positions}")
 
-                print("----------------------------------")
-
-                print(f" self.lines Antes {self.lines}")
                 self.lines = data["lines"]
-                print(f" self.lines Despues {self.lines}")
-
-                
                 self.next_number = len(self.number_positions)+1
-                print(f"next_number: {self.next_number}")
-                print("----------------------------------")
 
-                
-                
                 # Dibuja los numeros previamente guardados en la capa "numbers"
                 self.canvas.create_text(0, 0, text="", tags="numbers", font=("Arial", 11))
-                
+
                 numero_potrero = 1
                 for pos, i in zip(self.number_positions, range(self.next_number, len(self.number_positions)+self.next_number)):
-                    print(f"POS: {pos}")
-                    print(f"i: {i}")
-                    print(f"number_positions: {self.number_positions}")
-                    print(f"next_number: {self.next_number}")
-                    
                     self.canvas.create_text(pos[0], pos[1], text=str(numero_potrero), fill='white', tags="numbers", font=("Arial", 11))
                     numero_potrero +=1
 
@@ -204,7 +194,42 @@ class App(tk.Frame): # hereda de la clase Frame
         with open("data.json", "w") as f:
             json.dump(data, f)
 
-# if __name__ == '__main__':
+
+    def borrar_numeros(self):
+        # Elimina solo los numeros del canvas y del archivo data.json
+        self.canvas.delete("numbers")
+        self.number_positions = []
+
+        with open("data.json", "r") as f:
+            data = json.load(f)
+
+        data["numbers"] = []
+
+        with open("data.json", "w") as f:
+            json.dump(data, f)
+
+        self.next_number = 1
+
+    def borrar_lines(self):
+        # Elimina solo las lineas del canvas y del archivo data.json
+        self.canvas.delete("lines")
+        self.lines = []
+
+        with open("data.json", "r") as f:
+            data = json.load(f)
+
+        data["lines"] = []
+
+        with open("data.json", "w") as f:
+            json.dump(data, f)
+
+
+
+
+
+
+
+    # if __name__ == '__main__':
 root = tk.Tk()
 app = App(root)
 app.mainloop()
