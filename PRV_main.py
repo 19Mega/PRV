@@ -21,7 +21,7 @@ title_label.pack()
 
 button_frame = Frame(root, width=100)
 
-if not os.path.exists("data.json"):
+if not os.path.exists("prv.json"):
     data = {
         "1": {"fecha": "01/01/2023"},
         "2": {"fecha": "02/01/2023"},
@@ -50,6 +50,3 @@ for i in range(1, 6):
 button_frame.pack(side=LEFT, fill=Y)
 
 root.mainloop()
-
-
-
