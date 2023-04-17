@@ -115,11 +115,11 @@ class App(tk.Frame): # hereda de la clase Frame
             if self.line:
                 self.canvas.delete(self.line)
 
-            # Crea una nueva lÃÂÃÂÃÂÃÂ­nea de 10px en las coordenadas del clic y release
+            # Crea una nueva linea de 10px en las coordenadas del clic y release
             new_line = [(self.start_x, self.start_y), (x, y)]
             self.line = self.canvas.create_line(new_line, fill='white', width=3, tags="lines")
 
-            # Guarda la lÃÂÃÂÃÂÃÂ­nea en la lista
+            # Guarda la linea en la lista
             self.lines.append(new_line)
 
             # Guarda los datos
@@ -222,11 +222,6 @@ class App(tk.Frame): # hereda de la clase Frame
 
         with open("data.json", "w") as f:
             json.dump(data, f)
-
-
-
-
-
 
 
     # if __name__ == '__main__':
