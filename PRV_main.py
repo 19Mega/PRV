@@ -16,10 +16,10 @@ tk_image = ImageTk.PhotoImage(image)
 image_label.config(image=tk_image)
 image_label.pack(side=RIGHT)
 
-title_label = Label(root, text="Potreros", font=("Arial", 14), pady=5)
+title_label = Label(root, text="Potreros", font=("Arial", 18), pady=5, fg="#006400")
 title_label.pack()
 
-button_frame = Frame(root, width=100)
+button_frame = Frame(root, width=100, bg="#F5F5DC")
 
 if not os.path.exists("prv.json"):
     data = {
@@ -36,14 +36,14 @@ with open("prv.json", "r") as file:
     datos = json.load(file)
 
 for i in range(1, 6):
-    frame = Frame(button_frame, bd=1, relief=SOLID)
+    frame = Frame(button_frame, bd=1, relief=SOLID, bg="#F5F5DC")
     frame.pack(side=TOP, fill=X)
-    
-    button_style = {"font": ("Arial", 12), "bg": "#4CAF50", "fg": "white", "width": 5, "height": 1}
+
+    button_style = {"font": ("Arial", 12), "bg": "#8FBC8F", "fg": "white", "width": 5, "height": 1}
     button = Button(frame, text=" {}".format(i), **button_style)
     button.pack(side=LEFT, fill=X)
-    
-    label_style = {"font": ("Arial", 12), "bg": "#FFFFFF", "fg": "#555555", "width": 10, "height": 1}
+
+    label_style = {"font": ("Arial", 12), "bg": "#F5F5DC", "fg": "#4B0082", "width": 10, "height": 1}
     label = Label(frame, text="{}".format(datos[str(i)]["fecha"]), **label_style)
     label.pack(side=LEFT, fill=X)
 
