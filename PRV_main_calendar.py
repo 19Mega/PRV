@@ -7,17 +7,15 @@ import json
 
 class CalendarApp:
     def __init__(self):
+        
+        # Crea y carga todos los datos del programa
         self.dates = []
         self.numbers = []
         self.lines = []
-        
-        
         self.load_data()
+        
+        
         self.create_calendar()
-        
-        
-        
-        
         
         
     def create_calendar(self):
