@@ -9,7 +9,20 @@ from datetime import datetime, date
 # HAY QUE HACER QUE EL MAPA CARGUE LAS DATES, PORQUE SINO ME LAS ELIMINA CUANDO ARRANCA A AGREGAR COSAS, HAY QUE METER EL DATES ALLA
 # EN PRV_main_map_edit.py
 
-# NUMERO POTRERO ✔️ / FECHA ✔️ / DIAS DE DESCANSO / IS ACTIVE? / DESCRIPTION / AREA / ESPECIES
+
+#    TODO    #
+# N° POTRERO ✔️
+# FECHA ✔️
+# DIAS DE DESCANSO ✔️ (no se guarda, se calcula y se muestra)
+
+# IS ACTIVE? ✔️
+# TIME ACTIVE
+# TIME ACTIVE HISTORY 
+
+
+# DESCRIPTION ✔️ 
+# AREA 
+# ESPECIES
 
 class CalendarApp:
     def __init__(self):
@@ -23,43 +36,7 @@ class CalendarApp:
         self.counter = 0 
         self.load_data()  
         
-        
-        date_list = []
-        for item in self.dates:
-            date_list.append(item[1])
-        print(date_list) 
-        
-        hoy = date.today()
-        print(f"HOY : {hoy}")
-        
-        try:
-            fecha = datetime.strptime(date_list[0], "%d/%m/%y").date()
-            print(f"FECHA: {fecha}")
-        except IndexError:
-            print("no hay fecha")
-        
-        # si no hay fechas no funciona 
-        aca = hoy.day - fecha.day
-        print(aca)
-        
-        '''
-        hoy = date.today()
-        fecha_formateada = hoy.strftime("%d/%m/%Y")
-        print(f"HOY : {fecha_formateada}") # output: HOY : 24/4/2023
-        
-        resta = int(fecha_formateada) - int(date_list[0])
-        
-        print(f"RESTA : {resta}")
-        
-        ###############
-        
-        # transforma str en fecha 
-    
-        fecha = datetime.strptime(date_list[0], "%d/%m/%y").date()
-        print(f"FECHA: {fecha}")
-        
-        '''
-        
+
         
         self.create_calendar()
         
@@ -79,23 +56,65 @@ class CalendarApp:
         
         print(f"fecha seleccionada: {selected_date}")
         
-        
-        
-        
-        
         # Incrementar el contador y usar su valor como el identificador
         self.counter += 1
         potrero = self.counter
         
-        self.dates.append((potrero, selected_date))
+        is_active = False
+        time_active = None
+        description = "Descripcion del potrero"
+        species = {} # pendiente
+        area = "1 Ha"
+        
+        
+        self.dates.append((potrero, selected_date, is_active, time_active, description, area))
         print(f"Lista de fechas: {self.dates}")
+        
         self.save_data()
+        
+        
         
     def delete_last_date(self):
         self.dates.pop(-1)
         self.counter -= 1
         print(f"lista dates: {self.dates}")
         self.save_data()
+
+    def rest_days(self):
+        
+        date_list = [] # Output: ['3/4/23', '4/4/23', '5/4/23']
+        for item in self.dates:
+            date_list.append(item[1])
+        
+        date_format_list = [] # Output: [datetime.date(2023, 4, 3), datetime.date(2023, 4, 4), datetime.date(2023, 4, 5)]
+        try:
+            for item in date_list:
+                fecha = datetime.strptime(item, "%d/%m/%y").date()
+                date_format_list.append(fecha)
+        except IndexError:
+            print("no hay fecha")
+
+        hoy = date.today()
+        print(f"HOY : {hoy}")
+        
+        rest_list = [] # Output: [datetime.timedelta(days=22), datetime.timedelta(days=21), datetime.timedelta(days=20)]
+        try: # si no hay fechas no funciona 
+            for fecha in date_format_list:
+                descanso = hoy - fecha
+                rest_list.append(descanso)
+        except IndexError:
+            print("no hay fecha para restar")        
+        
+        
+        dias_list = [rest.days for rest in rest_list] # Output: [22, 21, 20] 
+        print(dias_list)
+        # 
+        # for i, dato in enumerate(self.dates): # self.dates Output: [[1, '3/4/23', 22], [2, '4/4/23', 21], [3, '5/4/23', 20]]
+        #    dato.append(dias_list[i])
+        #    
+        # print(self.dates)
+
+
 
     def load_data(self):
         try:
