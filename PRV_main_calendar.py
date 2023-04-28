@@ -36,7 +36,7 @@ class CalendarApp:
         self.counter = 0 
         self.load_data()  
         
-
+        # self.rest_days()
         
         self.create_calendar()
         
@@ -65,7 +65,6 @@ class CalendarApp:
         description = "Descripcion del potrero"
         species = {} # pendiente
         area = "1 Ha"
-        
         
         self.dates.append((potrero, selected_date, is_active, time_active, description, area))
         print(f"Lista de fechas: {self.dates}")
