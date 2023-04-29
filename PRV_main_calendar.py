@@ -21,7 +21,7 @@ from datetime import datetime, date
 
 
 # DESCRIPTION ✔️ 
-# AREA 
+# AREA ✔️ 
 # ESPECIES
 
 class CalendarApp:
@@ -32,11 +32,14 @@ class CalendarApp:
         self.numbers = []
         self.lines = []
         
+        
+        
         # Contador para los potreros (numero antes de la fecha)
         self.counter = 0 
         self.load_data()  
         
         # self.rest_days()
+        self.use_time()
         
         self.create_calendar()
         
@@ -49,6 +52,8 @@ class CalendarApp:
         btn.pack(pady=10)
         btn_2 = tk.Button(self.root, text="Eliminar fecha", command=self.delete_last_date)
         btn_2.pack(pady=10)
+        
+        
         
 
     def create_selected_date(self):
@@ -66,11 +71,11 @@ class CalendarApp:
         species = {} # pendiente
         area = "1 Ha"
         
-        self.dates.append((potrero, selected_date, is_active, time_active, description, area))
+        self.dates.append((potrero, selected_date, is_active, description, area))
         print(f"Lista de fechas: {self.dates}")
         
         self.save_data()
-        
+
         
         
     def delete_last_date(self):
@@ -78,6 +83,22 @@ class CalendarApp:
         self.counter -= 1
         print(f"lista dates: {self.dates}")
         self.save_data()
+        
+    # cronometro
+    def use_time(self):
+        
+        
+        
+        for item in self.dates:
+            if item[2] == True:
+                print(f"Potrero usado: {item} ")
+            
+        
+            
+    # [(1, '10/4/23', TRUE , 'Descripcion del potrero', '1 Ha')
+    # [(1, startTime: x, endtime:y]
+    # [22, 21, 20] 
+    
 
     def rest_days(self):
         
