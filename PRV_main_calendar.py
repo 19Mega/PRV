@@ -1,6 +1,7 @@
 # HAY QUE HACER QUE EL MAPA CARGUE LAS DATES, PORQUE SINO ME LAS ELIMINA CUANDO ARRANCA A AGREGAR COSAS, HAY QUE METER EL DATES ALLA
 # EN PRV_main_map_edit.py
 
+
 #    TODO    #
 # N° POTRERO ✔️
 # FECHA ✔️
@@ -10,14 +11,15 @@
 # TIME ACTIVE
 # TIME ACTIVE HISTORY 
 
+
 # DESCRIPTION ✔️ 
 # AREA ✔️ 
 # ESPECIES
-
 import tkinter as tk
 from tkcalendar import Calendar, DateEntry
 import json
 from datetime import datetime, date
+
 
 class CalendarApp:
     def __init__(self):
@@ -39,7 +41,7 @@ class CalendarApp:
 
         self.create_calendar()
 
-        #Frames
+        # Frames
         self.campo_frame = tk.Frame(self.root, bg="#312f47", relief="solid", bd=1)
         self.fecha_frame = tk.Frame(self.root, bg="#312f47", relief="solid", bd=1)
         self.en_uso_frame = tk.Frame(self.root, bg="#312f47", relief="solid", bd=1)
@@ -48,8 +50,7 @@ class CalendarApp:
         self.dias_descanso_frame = tk.Frame(self.root, bg="#312f47", relief="solid", bd=1)
         self.tiempo_activo_frame = tk.Frame(self.root, bg="#312f47", relief="solid", bd=1)
 
-
-        #Modificar tamaño y ancho de los frames y botones
+        # Modificar tamaño y ancho de los frames y botones
         self.campo_frame.pack(side="left", padx=5, pady=5, fill="both", expand=True)
         self.fecha_frame.pack(side="left", padx=5, pady=5, fill="both", expand=True)
         self.en_uso_frame.pack(side="left", padx=5, pady=5, fill="both", expand=True)
@@ -58,14 +59,21 @@ class CalendarApp:
         self.dias_descanso_frame.pack(side="left", padx=5, pady=5, fill="both", expand=True)
         self.tiempo_activo_frame.pack(side="left", padx=5, pady=5, fill="both", expand=True)
 
-        #Labels
-        campo_label = tk.Label(self.campo_frame, text="Potrero: ", anchor="nw", fg="white", bg="#2d4059", font=("Arial", 10, "bold"))
-        fecha_label = tk.Label(self.fecha_frame, text="Ultimo Pastoreo: ", anchor="nw", fg="white", bg="#ea5455", font=("Arial", 10, "bold"))
-        en_uso_label = tk.Label(self.en_uso_frame, text="En Uso: ", anchor="nw", fg="white", bg="#f07b3f", font=("Arial", 10, "bold"))
-        descripcion_label = tk.Label(self.descripcion_frame, text="Descripción del Potrero: ", anchor="nw", fg="white", bg="#20bf6b", font=("Arial", 10, "bold"))
-        tamano_label = tk.Label(self.tamano_frame, text="Tamaño: ", anchor="nw", fg="white", bg="#6d87a6", font=("Arial", 10, "bold"))
-        dias_descanso_label = tk.Label(self.dias_descanso_frame, text="Días Descanso: ", anchor="nw", fg="black", bg="white", font=("Arial", 10, "bold"))
-        tiempo_activo_label = tk.Label(self.tiempo_activo_frame, text="Tiempo: ", anchor="nw", fg="black", bg="white", font=("Arial", 10, "bold"))
+        # Labels
+        campo_label = tk.Label(self.campo_frame, text="Potrero: ", anchor="nw", fg="white", bg="#2d4059",
+                               font=("Arial", 10, "bold"))
+        fecha_label = tk.Label(self.fecha_frame, text="Ultimo Pastoreo: ", anchor="nw", fg="white", bg="#ea5455",
+                               font=("Arial", 10, "bold"))
+        en_uso_label = tk.Label(self.en_uso_frame, text="En Uso: ", anchor="nw", fg="white", bg="#f07b3f",
+                                font=("Arial", 10, "bold"))
+        descripcion_label = tk.Label(self.descripcion_frame, text="Descripción del Potrero: ", anchor="nw",
+                                     fg="white", bg="#20bf6b", font=("Arial", 10, "bold"))
+        tamano_label = tk.Label(self.tamano_frame, text="Tamaño: ", anchor="nw", fg="white", bg="#6d87a6",
+                                font=("Arial", 10, "bold"))
+        dias_descanso_label = tk.Label(self.dias_descanso_frame, text="Días Descanso: ", anchor="nw", fg="black",
+                                       bg="white", font=("Arial", 10, "bold"))
+        tiempo_activo_label = tk.Label(self.tiempo_activo_frame, text="Tiempo: ", anchor="nw", fg="black", bg="white",
+                                       font=("Arial", 10, "bold"))
 
         campo_label.pack(side="top", pady=5)
         fecha_label.pack(side="top", pady=5)
@@ -74,6 +82,8 @@ class CalendarApp:
         tamano_label.pack(side="top", pady=5)
         dias_descanso_label.pack(side="top", pady=5)
         tiempo_activo_label.pack(side="top", pady=5)
+
+        self.load_selected_dates()
 
     def create_calendar(self):
         self.cal = Calendar(self.root, selectmode='day')
@@ -85,32 +95,29 @@ class CalendarApp:
         btn_2 = tk.Button(self.root, text="Eliminar fecha", command=self.delete_last_date, width=20)
         btn_2.pack(pady=10)
 
-    def create_selected_date(self):
+    def create_selected_date(self, is_active=False, time_active=None, description="Descripcion del potrero", species={},
+                             area="1 Ha"):
         selected_date = self.cal.get_date()
 
         # Incrementar el contador y usar su valor como el identificador
         self.counter += 1
         potrero = self.counter
 
-        is_active = False
-        time_active = None
-        description = "Descripcion del potrero"
-        species = {} # pendiente
-        area = "1 Ha"
         rest_days = str(self.calcule_rest_day(selected_date))
 
-        self.dates.append((potrero, selected_date, description, area))
+        self.dates.append((potrero, selected_date, is_active, time_active, description, species, area))
         print(f"Lista de fechas: {self.dates}")
 
-        # numero potrer / dias descanso list
-
-        campo_dato = tk.Button(self.campo_frame, text=potrero, anchor="center", command=self.print_hola, width=5, height=1)
+        # Numero potrero / dias descanso list
+        campo_dato = tk.Button(self.campo_frame, text=potrero, anchor="center",
+                                command=lambda potrero=potrero: self.toggle_active(potrero), width=5, height=1)
         campo_dato.pack(side="top", fill="both", expand=True, padx=5, pady=5)
 
         fecha_dato = tk.Label(self.fecha_frame, text=selected_date, anchor="nw")
         fecha_dato.pack(side="top", fill="both", expand=True, padx=5, pady=5)
 
-        en_uso_dato = tk.Label(self.en_uso_frame, text="Sí" if is_active else "No", anchor="nw")
+        en_uso_text = "Sí" if is_active else "No"
+        en_uso_dato = tk.Label(self.en_uso_frame, text=en_uso_text, anchor="nw")
         en_uso_dato.pack(side="top", fill="both", expand=True, padx=5, pady=5)
 
         descripcion_dato = tk.Label(self.descripcion_frame, text=description, anchor="nw")
@@ -127,30 +134,76 @@ class CalendarApp:
 
         self.save_data()
 
+    def load_selected_dates(self):
+        # self.dates.append((potrero, selected_date, is_active, time_active, description, species, area))
+        for date in self.dates:
+
+            '''
+            1,
+            "1/5/23",
+            false,
+            null,
+            "Descripcion del potrero",
+            {},
+            "1 Ha"
+            '''
+            print("-----------------------------")
+            print(date[0])  # 1
+            print(date[1])  # 1/5/23
+            print(date[2])  # False
+            print(date[3])  # None
+            print(date[4])  # Descripcion del potrero
+            print(date[5])  # {}
+            print(date[6])  # 1 Ha
+
+            rest_days = str(self.calcule_rest_day(date[1]))
+
+            # Numero potrero / dias descanso list
+            campo_dato = tk.Button(self.campo_frame, text=date[0], anchor="center",
+                                    command=lambda potrero=date[0]: self.toggle_active(potrero), width=5, height=1)
+            campo_dato.pack(side="top", fill="both", expand=True, padx=5, pady=5)
+
+            fecha_dato = tk.Label(self.fecha_frame, text=date[1], anchor="nw")
+            fecha_dato.pack(side="top", fill="both", expand=True, padx=5, pady=5)
+
+            en_uso_text = "Sí" if date[2] else "No"
+            en_uso_dato = tk.Label(self.en_uso_frame, text=en_uso_text, anchor="nw")
+            en_uso_dato.pack(side="top", fill="both", expand=True, padx=5, pady=5)
+
+            descripcion_dato = tk.Label(self.descripcion_frame, text=date[4], anchor="nw")
+            descripcion_dato.pack(side="top", fill="both", expand=True, padx=5, pady=5)
+
+            tamano_dato = tk.Label(self.tamano_frame, text=date[6], anchor="nw")
+            tamano_dato.pack(side="top", fill="both", expand=True, padx=5, pady=5)
+
+            dias_descanso = tk.Label(self.dias_descanso_frame, text=rest_days, anchor="nw")
+            dias_descanso.pack(side="top", fill="both", expand=True, padx=5, pady=5)
+
+            tiempo_activo = tk.Label(self.tiempo_activo_frame, text="00:00:00", anchor="nw")
+            tiempo_activo.pack(side="top", fill="both", expand=True, padx=5, pady=5)
+
     def print_hola(self):
         print("Hola")
 
-    def delete_last_date(self):
-        self.dates.pop(-1)
-        self.counter -= 1
+    # Función callback que cambia el estado de "En Uso" del potrero correspondiente al botón presionado.
+    # Lo actualiza solo en data.json
+    def toggle_active(self, potrero): # recibe 1
+        for index, date in enumerate(self.dates):
+            if date[0] == potrero:
+                tmp_list = list(date)
+                tmp_list[2] = not tmp_list[2]
+                self.dates[index] = tuple(tmp_list)
+                break
 
-        try:
-            if self.counter >= 0 :
-            # Elimina los widgets correspondientes 
-                self.campo_frame.winfo_children()[-1].destroy()
-                self.fecha_frame.winfo_children()[-1].destroy()
-                self.en_uso_frame.winfo_children()[-1].destroy()
-                self.descripcion_frame.winfo_children()[-1].destroy()
-                self.tamano_frame.winfo_children()[-1].destroy()
-                self.dias_descanso_frame.winfo_children()[-1].destroy()
-                self.tiempo_activo_frame.winfo_children()[-1].destroy()
-        except:
-            pass
+        # Actualiza el texto del label correspondiente
+        for child in self.en_uso_frame.winfo_children():
+            if child.cget('text') == potrero:
+                en_uso_text = "Sí" if self.dates[index][2] else "No"
+                child.config(text=en_uso_text)
 
-        print(f"lista dates: {self.dates}")
         self.save_data()
 
-    # cronometro
+    # pendiente
     def use_time(self):
         for item in self.dates:
             if item[2] == True:
@@ -180,23 +233,45 @@ class CalendarApp:
         print(f"HOY : {hoy}")
 
         rest_list = [] # Output: [datetime.timedelta(days=22), datetime.timedelta(days=21), datetime.timedelta(days=20)]
-        try: # si no hay fechas no funciona 
+        try:
             for fecha in date_format_list:
                 descanso = hoy - fecha
                 rest_list.append(descanso)
         except IndexError:
             print("no hay fecha para restar")
 
-        dias_list = [rest.days for rest in rest_list] # Output: [22, 21, 20] 
+        dias_list = [rest.days for rest in rest_list] # Output: [22, 21, 20]
         print(dias_list)
 
+    # DELETE
+    def delete_last_date(self):
+        self.dates.pop(-1)
+        self.counter -= 1
+
+        try:
+            if self.counter >= 0:
+                # Elimina los widgets correspondientes
+                self.campo_frame.winfo_children()[-1].destroy()
+                self.fecha_frame.winfo_children()[-1].destroy()
+                self.en_uso_frame.winfo_children()[-1].destroy()
+                self.descripcion_frame.winfo_children()[-1].destroy()
+                self.tamano_frame.winfo_children()[-1].destroy()
+                self.dias_descanso_frame.winfo_children()[-1].destroy()
+                self.tiempo_activo_frame.winfo_children()[-1].destroy()
+        except:
+            pass
+
+        print(f"lista dates: {self.dates}")
+        self.save_data()
+
+    # LOAD
     def load_data(self):
         try:
             with open("data.json", "r") as f:
                 data = json.load(f)
                 self.numbers = data["numbers"]
                 self.lines = data["lines"]
-                # despues de agregar dates a el editor de map, revisamos aca ! ! ! ! !
+                # Después de agregar dates a el editor de map, revisamos acá
                 try:
                     self.dates = data["dates"]
                 except KeyError:
@@ -217,6 +292,7 @@ class CalendarApp:
             print("La lista de fechas está vacía.")
             self.counter = 0
 
+    # SAVE
     def save_data(self):
         data = {
             "dates": self.dates,
@@ -226,6 +302,7 @@ class CalendarApp:
 
         with open("data.json", "w") as f:
             json.dump(data, f, indent=4)
+
 
 app = CalendarApp()
 app.root.mainloop()
