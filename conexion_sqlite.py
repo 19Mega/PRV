@@ -24,6 +24,7 @@
 
 from datetime import datetime
 import sqlite3
+from tkinter import *
 
 class Comunication():
     def __init__(self):
@@ -44,58 +45,19 @@ class Comunication():
         # self.get_restDays(4) # FUNCIONA
         # self.get_grazinTime(4) # FUNCIONA
         
-        
+        # self.set_parcelDescription(4, "Descipcion actualizada") # FUNCIONA 
+        # self.set_parcelSize(4, 5.2) # FUNCIONA
+        # self.set_isActive(4, True) # FUNCIONA
+        # self.set_parcelLastGrazingDate(4, datetime.now()) # FUNCIONA tiene que ser formato datetime
+        # self.set_parcelSpecies(4, "Variadas con pasto miel") # FUNCIONA
+        # self.set_parcelStocking(4, 25) # FUNCIONA
+        # self.set_restDays(4, 12) # FUNCIONA
+        # self.set_grazinTime(4, datetime.now()) # FUNCIONA        
+        self.get_parcel_numbers_and_status()
     
-    def insertar_datos(self, nombre, edad, correo, telefono):
-        cursor = self.conexion.cursor()
-        bd = ''' INSERT INTO tabla_name (NOMBRE, EDAD, CORREO, TELEFONO) VALUES ('{}','{}','{}','{}',) '''.format(nombre, edad, correo, telefono)
-        cursor.execute(bd)
-        self.conexion.commit()
-        cursor.close()
+    # GETTERS & SETTERS
     
-    def mostar_datos (self):
-        cursor = self.conexion.cursor()
-        bd= "SELECT * FROM datos"
-        cursor.execute(bd)
-        datos = cursor.fetchall()
-        return datos
-    
-    def elimina_datos(self, nombre):
-        cursor = self.conexion.cursor()
-        bd = '''DELETE FROM datos WHERE NOMBRE = '{}' '''.format(nombre)
-        cursor.execute(bd)
-        self.conexion.commit()
-        cursor.close()
-        
-    def actualiza_datos(self, ID, nombre, edad, correo, telefono):
-        cursor = self.conexion.cursor()
-        bd = '''UPDATE datos SET NOMBRE = '{}', EDAD = '{}', CORREO = '{}', TELEFONO = '{}' WHERE ID = '{}' '''.format(nombre, edad, correo, telefono, ID)
-        cursor.execute(bd)
-        dato = cursor.rowcount
-        self.conexion.commit()
-        cursor.close() # cierra bd
-        return dato
-    
-    def bd_save(self):
-        cursor = self.conexion.cursor()
-        bd = "INSERT INTO usuarios (parcelNumber, parcelDescription, parcelSize, parcelSpecies, parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (parcelNumber, parcelDescription, parcelSize, parcelSpecies, parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime)
-                
-        parcelNumber = None
-        parcelDescription = None
-        parcelSize = None
-        parcelSpecies = None
-        parcelStocking = None
-        parcelLastGrazingDate = None
-        restDays = None
-        isActive = None
-        grazinTime = None
-    
-    
-    
-    
-    
-    
-    
+    # parcelDescription
     def get_parcelDescription(self, parcelNumber):
         cursor = self.conexion.cursor()
         bd = "SELECT parcelDescription FROM campo WHERE parcelNumber = ?"
@@ -105,9 +67,12 @@ class Comunication():
         return resultado
     
     def set_parcelDescription(self, parcelNumber, parcelDescription):
-        pass
-        
-
+        cursor = self.conexion.cursor()
+        bd = "UPDATE campo SET parcelDescription = ? WHERE parcelNumber = ?"
+        cursor.execute(bd, (parcelDescription, parcelNumber))
+        self.conexion.commit()
+    
+    # parcelSize
     def get_parcelSize(self, parcelNumber):
         cursor = self.conexion.cursor()
         bd = "SELECT parcelSize FROM campo WHERE parcelNumber = ?"
@@ -116,9 +81,13 @@ class Comunication():
         print("Resultado: ", resultado)
         return resultado
     
-    def set_parcelSize(self, parcelNumber, parcel_Size):
-        pass
+    def set_parcelSize(self, parcelNumber, parcelSize):
+        cursor = self.conexion.cursor()
+        bd = "UPDATE campo SET parcelSize = ? WHERE parcelNumber = ?"
+        cursor.execute(bd, (parcelSize, parcelNumber))
+        self.conexion.commit()
     
+    # parcelSpecies
     def get_parcelSpecies(self, parcelNumber):
         cursor = self.conexion.cursor()
         bd = "SELECT parcelSpecies FROM campo WHERE parcelNumber = ?"
@@ -128,8 +97,12 @@ class Comunication():
         return resultado
     
     def set_parcelSpecies(self, parcelNumber, parcelSpecies):
-        pass
+        cursor = self.conexion.cursor()
+        bd = "UPDATE campo SET parcelSpecies = ? WHERE parcelNumber = ?"
+        cursor.execute(bd, (parcelSpecies, parcelNumber))
+        self.conexion.commit()
     
+    # parcelStocking
     def get_parcelStocking(self, parcelNumber):
         cursor = self.conexion.cursor()
         bd = "SELECT parcelStocking FROM campo WHERE parcelNumber = ?"
@@ -139,8 +112,12 @@ class Comunication():
         return resultado
     
     def set_parcelStocking(self, parcelNumber, parcelStocking):
-        pass
+        cursor = self.conexion.cursor()
+        bd = "UPDATE campo SET parcelStocking = ? WHERE parcelNumber = ?"
+        cursor.execute(bd, (parcelStocking, parcelNumber))
+        self.conexion.commit()
     
+    # parcelLastGrazingDate
     def get_parcelLastGrazingDate(self, parcelNumber):
         cursor = self.conexion.cursor()
         bd = "SELECT parcelLastGrazingDate FROM campo WHERE parcelNumber = ?"
@@ -150,8 +127,12 @@ class Comunication():
         return resultado
     
     def set_parcelLastGrazingDate(self, parcelNumber, parcelLastGrazingDate):
-        pass
+        cursor = self.conexion.cursor()
+        bd = "UPDATE campo SET parcelLastGrazingDate = ? WHERE parcelNumber = ?"
+        cursor.execute(bd, (parcelLastGrazingDate, parcelNumber))
+        self.conexion.commit()
     
+    # restDays
     def get_restDays(self, parcelNumber):
         cursor = self.conexion.cursor()
         bd = "SELECT restDays FROM campo WHERE parcelNumber = ?"
@@ -161,8 +142,12 @@ class Comunication():
         return resultado
     
     def set_restDays(self, parcelNumber, restDays):
-        pass
+        cursor = self.conexion.cursor()
+        bd = "UPDATE campo SET restDays = ? WHERE parcelNumber = ?"
+        cursor.execute(bd, (restDays, parcelNumber))
+        self.conexion.commit()
     
+    # isActive
     def get_isActive(self, parcelNumber):
         cursor = self.conexion.cursor()
         bd = "SELECT isActive FROM campo WHERE parcelNumber = ?"
@@ -172,9 +157,12 @@ class Comunication():
         return resultado
     
     def set_isActive(self, parcelNumber, isActive):
-        pass
+        cursor = self.conexion.cursor()
+        bd = "UPDATE campo SET isActive = ? WHERE parcelNumber = ?"
+        cursor.execute(bd, (isActive, parcelNumber))
+        self.conexion.commit()
     
-    
+    # grazinTime
     def get_grazinTime(self, parcelNumber):
         cursor = self.conexion.cursor()
         bd = "SELECT grazinTime FROM campo WHERE parcelNumber = ?"
@@ -184,9 +172,34 @@ class Comunication():
         return resultado
     
     def set_grazinTime(self, parcelNumber, grazinTime):
-        pass
+        cursor = self.conexion.cursor()
+        bd = "UPDATE campo SET grazinTime = ? WHERE parcelNumber = ?"
+        cursor.execute(bd, (grazinTime, parcelNumber))
+        self.conexion.commit()
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    # ------------------------------------------------------------------------
+    
+    # GENERAL FUNCTIONS
     
     def get_last_potrero_number(self): # FUNCIONA
         try:
@@ -240,8 +253,22 @@ class Comunication():
         cursor.execute(bd, (parcelNumber, parcelDescription, parcelSize, parcelSpecies, parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime))
         
         self.conexion.commit() # guarda bd
-    
 
+
+######################## # prueba 1
+
+    def get_parcel_numbers_and_status(self):
+        cursor = self.conexion.cursor()
+        bd = "SELECT parcelNumber, restDays, isActive FROM campo"
+        cursor.execute(bd)
+        resultados = cursor.fetchall()
+        print("Resultado: ", resultados)
+        return resultados
+    
+#########################
+
+    # BD FUNCTIONS
+    
     def crear_bd_table(self): # FUNCIONA
         cursor = self.conexion.cursor()
         
@@ -284,4 +311,4 @@ class Comunication():
 
 
 
-ventana = Comunication()
+# ventana = Comunication()
