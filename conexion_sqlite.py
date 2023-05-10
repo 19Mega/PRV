@@ -53,7 +53,137 @@ class Comunication():
         # self.set_parcelStocking(4, 25) # FUNCIONA
         # self.set_restDays(4, 12) # FUNCIONA
         # self.set_grazinTime(4, datetime.now()) # FUNCIONA        
-        self.get_parcel_numbers_and_status()
+        # self.get_parcel_numbers_and_status()
+        self.get_all()
+    
+
+    
+    
+######################## # prueba 1
+    def get_parcel_numbers_and_status(self):
+        cursor = self.conexion.cursor()
+        bd = "SELECT parcelNumber, restDays, isActive FROM campo"
+        # bd = "SELECT * FROM campo"
+        cursor.execute(bd)
+        resultados = cursor.fetchall()
+        print("Resultado: ", resultados)
+        return resultados
+    
+    def get_all(self):
+        cursor = self.conexion.cursor()
+        bd = "SELECT * FROM campo"
+        cursor.execute(bd)
+        resultados = cursor.fetchall()
+        print("Resultado: ", resultados)
+        return resultados
+
+#########################
+    
+    
+    
+    # GENERAL FUNCTIONS
+    
+    def get_last_potrero_number(self): # FUNCIONA
+        try:
+            cursor = self.conexion.cursor()
+            bd = "SELECT MAX(parcelNumber) FROM campo;"
+            cursor.execute(bd) # hacemos la consulta
+            resultado = cursor.fetchone()[0] # tomamos el ultimo parcelNumber de la tabla
+            if resultado is None:
+                print("No se encontraron potreros")
+            return resultado
+        except:
+            pass
+
+    def delete_last_potrero(self): # FUNCIONA
+        try: 
+            cursor = self.conexion.cursor()
+            resultado = self.get_last_potrero_number()
+            # print(resultado) # ELININAR
+            bd_delete = "DELETE FROM campo WHERE parcelNumber = ?"
+            cursor.execute(bd_delete, (resultado,))
+            self.conexion.commit()
+        except: 
+            pass
+
+    def delete_potrero(self, parcelNumber): # FUNCIONA
+        print("en funcion delete_potrero: ", parcelNumber)
+        parcelNumber = int(parcelNumber)
+        cursor = self.conexion.cursor()
+        bd_delete = "DELETE FROM campo WHERE parcelNumber = ?"
+        cursor.execute(bd_delete, (parcelNumber,))
+        self.conexion.commit()
+        
+        
+
+    def crear_potrero_default(self): # FUNCIONA
+        cursor = self.conexion.cursor()
+        
+        try: parcelNumber = self.get_last_potrero_number() + 1
+        except: parcelNumber = 1    
+        
+        parcelDescription = "Descripcion de potrero"
+        parcelSize = 1
+        parcelSpecies = "Variadas"
+        parcelStocking = 0
+        parcelLastGrazingDate = datetime.today()
+        restDays = 0
+        isActive = False
+        grazinTime = datetime.now()
+        
+        bd = "INSERT INTO campo (parcelNumber, parcelDescription, parcelSize, parcelSpecies, parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(bd, (parcelNumber, parcelDescription, parcelSize, parcelSpecies, parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime))
+        
+        self.conexion.commit() # guarda bd
+
+
+
+
+    # BD FUNCTIONS
+    
+    def crear_bd_table(self): # FUNCIONA
+        cursor = self.conexion.cursor()
+        
+        bd = '''CREATE TABLE IF NOT EXISTS campo 
+                (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                parcelNumber INTEGER,
+                parcelDescription TEXT,
+                parcelSize FLOAT,
+                parcelSpecies TEXT,
+                parcelStocking INTEGER,
+                parcelLastGrazingDate DATE,
+                restDays INTEGER,
+                isActive BOOLEAN,
+                grazinTime DATETIME)'''
+        
+        cursor.execute(bd) # ejecuta query
+        self.conexion.commit() # guarda bd
+    
+
+    def insertar_datos_prueba(self): # FUNCIONA
+        cursor = self.conexion.cursor()
+        
+        parcelNumber = 1
+        parcelDescription = "Descripcion de parcela"
+        parcelSize = 1
+        parcelSpecies = "Varias"
+        parcelStocking = 20
+        parcelLastGrazingDate = datetime.today()
+        restDays = 10
+        isActive = False
+        grazinTime = datetime.now()
+        
+        bd = "INSERT INTO campo (parcelNumber, parcelDescription, parcelSize, parcelSpecies, parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(bd, (parcelNumber, parcelDescription, parcelSize, parcelSpecies, parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime))
+        
+        self.conexion.commit() # guarda bd
+    
+    
+    
+    
+    
+    
+    
     
     # GETTERS & SETTERS
     
@@ -177,138 +307,10 @@ class Comunication():
         cursor.execute(bd, (grazinTime, parcelNumber))
         self.conexion.commit()
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    # ------------------------------------------------------------------------
-    
-    # GENERAL FUNCTIONS
-    
-    def get_last_potrero_number(self): # FUNCIONA
-        try:
-            cursor = self.conexion.cursor()
-            bd = "SELECT MAX(parcelNumber) FROM campo;"
-            cursor.execute(bd) # hacemos la consulta
-            resultado = cursor.fetchone()[0] # tomamos el ultimo parcelNumber de la tabla
-            if resultado is None:
-                print("No se encontraron potreros")
-            return resultado
-        except:
-            pass
-
-    def delete_last_potrero(self): # FUNCIONA
-        try: 
-            cursor = self.conexion.cursor()
-            resultado = self.get_last_potrero_number()
-            # print(resultado) # ELININAR
-            bd_delete = "DELETE FROM campo WHERE parcelNumber = ?"
-            cursor.execute(bd_delete, (resultado,))
-            self.conexion.commit()
-        except: 
-            pass
-
-    def delete_potrero(self, parcelNumber): # FUNCIONA
-        print("en funcion delete_potrero: ", parcelNumber)
-        parcelNumber = int(parcelNumber)
-        cursor = self.conexion.cursor()
-        bd_delete = "DELETE FROM campo WHERE parcelNumber = ?"
-        cursor.execute(bd_delete, (parcelNumber,))
-        self.conexion.commit()
-        
-        
-
-    def crear_potrero_default(self): # FUNCIONA
-        cursor = self.conexion.cursor()
-        
-        try: parcelNumber = self.get_last_potrero_number() + 1
-        except: parcelNumber = 1    
-        
-        parcelDescription = "Descripcion de potrero"
-        parcelSize = 1
-        parcelSpecies = "Variadas"
-        parcelStocking = 0
-        parcelLastGrazingDate = datetime.today()
-        restDays = 0
-        isActive = False
-        grazinTime = datetime.now()
-        
-        bd = "INSERT INTO campo (parcelNumber, parcelDescription, parcelSize, parcelSpecies, parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(bd, (parcelNumber, parcelDescription, parcelSize, parcelSpecies, parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime))
-        
-        self.conexion.commit() # guarda bd
-
-
-######################## # prueba 1
-
-    def get_parcel_numbers_and_status(self):
-        cursor = self.conexion.cursor()
-        bd = "SELECT parcelNumber, restDays, isActive FROM campo"
-        cursor.execute(bd)
-        resultados = cursor.fetchall()
-        print("Resultado: ", resultados)
-        return resultados
-    
-#########################
-
-    # BD FUNCTIONS
-    
-    def crear_bd_table(self): # FUNCIONA
-        cursor = self.conexion.cursor()
-        
-        bd = '''CREATE TABLE IF NOT EXISTS campo 
-                (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                parcelNumber INTEGER,
-                parcelDescription TEXT,
-                parcelSize FLOAT,
-                parcelSpecies TEXT,
-                parcelStocking INTEGER,
-                parcelLastGrazingDate DATE,
-                restDays INTEGER,
-                isActive BOOLEAN,
-                grazinTime DATETIME)'''
-        
-        cursor.execute(bd) # ejecuta query
-        self.conexion.commit() # guarda bd
-    
-
-    def insertar_datos_prueba(self): # FUNCIONA
-        cursor = self.conexion.cursor()
-        
-        parcelNumber = 1
-        parcelDescription = "Descripcion de parcela"
-        parcelSize = 1
-        parcelSpecies = "Varias"
-        parcelStocking = 20
-        parcelLastGrazingDate = datetime.today()
-        restDays = 10
-        isActive = False
-        grazinTime = datetime.now()
-        
-        bd = "INSERT INTO campo (parcelNumber, parcelDescription, parcelSize, parcelSpecies, parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        cursor.execute(bd, (parcelNumber, parcelDescription, parcelSize, parcelSpecies, parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime))
-        
-        self.conexion.commit() # guarda bd
 
 
 
 
 
 
-# ventana = Comunication()
+ventana = Comunication()
