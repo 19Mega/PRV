@@ -1,19 +1,3 @@
-
-# SELECT * FROM tabla;
-# SELECT: Se utiliza para seleccionar datos de una tabla.
-
-# INSERT INTO tabla (columna1, columna2) VALUES (valor1, valor2);
-# INSERT: Se utiliza para insertar datos en una tabla.
-
-# UPDATE tabla SET columna1 = valor1 WHERE columna2 = valor2;
-# UPDATE: Se utiliza para actualizar datos en una tabla.
-
-# DELETE FROM tabla WHERE columna1 = valor1;
-# DELETE: Se utiliza para eliminar filas de una tabla.
-
-# SELECT COUNT(*) FROM tabla WHERE columna1 = valor1;
-# COUNT: Se utiliza para contar el número de filas que cumplen ciertas condiciones.
-
 # conexion = sqlite3.connect('database.db') # Se utiliza para conectarse a una base de datos SQLite y devolver un objeto de conexión.
 # cursor = conexion.cursor() # permite usar el .execute('Query')
 # cursor.execute('SELECT * FROM tabla') # execute: Se utiliza para ejecutar comandos SQL en la base de datos.
@@ -21,6 +5,8 @@
 # conexion.commit() # guarda bd
 # conexion.close() # cierra bd
 
+# def __init__(self, parcelNumber = None, parcelDescription = None, parcelSize = None, parcelSpecies = None,
+#              parcelStocking = None, parcelLastGrazingDate = None, restDays = None, isActive = None, grazinTime = None):
 
 from datetime import datetime
 import sqlite3
@@ -28,8 +14,10 @@ from tkinter import *
 
 class Comunication():
     def __init__(self):
+        
         self.conexion = sqlite3.connect("prv.db") # FUNCIONA -> crea base datos
-        self.crear_bd_table() # FUNCIONA -> crea tabla
+        self.crear_bd_table() # FUNCIONA -> crea tabla   
+        
         # self.insertar_datos_prueba() # FUNCIONA -> prueba
         # self.get_last_potrero_number() # FUNCIONA -> obtiene ultimo potrero ingresado
         # self.crear_potrero_default() # FUNCIONA -> crea potrero
@@ -45,42 +33,54 @@ class Comunication():
         # self.get_restDays(4) # FUNCIONA
         # self.get_grazinTime(4) # FUNCIONA
         
-        # self.set_parcelDescription(4, "Descipcion actualizada") # FUNCIONA 
-        # self.set_parcelSize(4, 5.2) # FUNCIONA
-        # self.set_isActive(4, True) # FUNCIONA
+        # self.set_parcelDescription(2, "Descipcion actualizada") # FUNCIONA 
+        # self.set_parcelSize(2, 5.2) # FUNCIONA
+        # self.set_isActive(2, True) # FUNCIONA
         # self.set_parcelLastGrazingDate(4, datetime.now()) # FUNCIONA tiene que ser formato datetime
-        # self.set_parcelSpecies(4, "Variadas con pasto miel") # FUNCIONA
-        # self.set_parcelStocking(4, 25) # FUNCIONA
-        # self.set_restDays(4, 12) # FUNCIONA
+        # self.set_parcelSpecies(2, "Variadas con pasto miel") # FUNCIONA
+        # self.set_parcelStocking(2, 25) # FUNCIONA
+        # self.set_restDays(3, 12) # FUNCIONA
         # self.set_grazinTime(4, datetime.now()) # FUNCIONA        
-        # self.get_parcel_numbers_and_status()
-        self.get_all()
-    
+        
+        # self.get_parcel_numbers_and_status() # FUNCIONA  
+        # self.get_all() # FUNCIONA  
+        
+        # self.rest_days_update() # FUNCIONA 
 
-    
-    
-######################## # prueba 1
-    def get_parcel_numbers_and_status(self):
-        cursor = self.conexion.cursor()
-        bd = "SELECT parcelNumber, restDays, isActive FROM campo"
-        # bd = "SELECT * FROM campo"
-        cursor.execute(bd)
-        resultados = cursor.fetchall()
-        print("Resultado: ", resultados)
-        return resultados
-    
-    def get_all(self):
-        cursor = self.conexion.cursor()
-        bd = "SELECT * FROM campo"
-        cursor.execute(bd)
-        resultados = cursor.fetchall()
-        print("Resultado: ", resultados)
-        return resultados
 
-#########################
-    
-    
-    
+#### 
+    def rest_days_update(self):
+        cursor = self.conexion.cursor()
+        bd = "SELECT parcelNumber, parcelLastGrazingDate FROM campo"
+        cursor.execute(bd)
+        resultado = cursor.fetchall()
+        parcelNumber_restDays_list = []
+        
+        for parcelNumber, parcelLastGrazingDate in resultado:
+            fecha = datetime.strptime(parcelLastGrazingDate, '%Y-%m-%d %H:%M:%S.%f')
+            diferencia = datetime.now() - fecha
+            parcelNumber_restDays_list.append((parcelNumber, diferencia.days))
+        
+        for parcelNumber, restDays in parcelNumber_restDays_list:
+            #print("parcelNumber: ", parcelNumber)
+            #print("restDays: ", restDays)
+            bd_2 = "UPDATE campo SET restDays = ? WHERE parcelNumber = ?"
+            cursor.execute(bd_2, (restDays, parcelNumber))
+            self.conexion.commit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     # GENERAL FUNCTIONS
     
     def get_last_potrero_number(self): # FUNCIONA
@@ -137,8 +137,6 @@ class Comunication():
         self.conexion.commit() # guarda bd
 
 
-
-
     # BD FUNCTIONS
     
     def crear_bd_table(self): # FUNCIONA
@@ -179,13 +177,25 @@ class Comunication():
         self.conexion.commit() # guarda bd
     
     
-    
-    
-    
-    
-    
-    
     # GETTERS & SETTERS
+    
+    ## Get all/some
+    def get_parcel_numbers_and_status(self):
+        cursor = self.conexion.cursor()
+        bd = "SELECT parcelNumber, restDays, isActive FROM campo"
+        # bd = "SELECT * FROM campo"
+        cursor.execute(bd)
+        resultados = cursor.fetchall()
+        print("Resultado: ", resultados)
+        return resultados
+    
+    def get_all(self):
+        cursor = self.conexion.cursor()
+        bd = "SELECT * FROM campo"
+        cursor.execute(bd)
+        resultados = cursor.fetchall()
+        print("Resultado: ", resultados)
+        return resultados
     
     # parcelDescription
     def get_parcelDescription(self, parcelNumber):
@@ -307,10 +317,4 @@ class Comunication():
         cursor.execute(bd, (grazinTime, parcelNumber))
         self.conexion.commit()
     
-
-
-
-
-
-
 ventana = Comunication()
