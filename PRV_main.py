@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from datetime import datetime
-import sqlite3
+
 from conexion_sqlite import Comunication
 from tkinter import messagebox
 
@@ -10,8 +10,6 @@ mi_comunicacion.rest_days_update()
 
 # ID, parcelNumber, parcelDescription, parcelSize, parcelSpecies, 
 # parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime
-
-from tkinter import *
 
 class MyButton(Button):
     def __init__(self, master, 
@@ -204,24 +202,32 @@ class MyButton(Button):
 root = tk.Tk()
 
 # Crear los tres frames (secciones verticales)
-frame1 = tk.Frame(root, bg="#312f47", width=300, height=700)
-frame_parcel_add = tk.Frame(frame1, bg="red", width=300, height=150)
-frame_parcel_button = tk.Frame(frame1, bg="black", width=300, height=550)
+
+frame1 = tk.Frame(root, bg="#312f47")
+
+frame_buttons = tk.Frame(frame1, bg="red", width=10, height=700)
+frame_parcel_add = tk.Frame(frame1, bg="#312f47", width=350, height=150)
+frame_parcel_button = tk.Frame(frame1, bg="#312f47", width=400, height=550)
 
 frame2 = tk.Frame(root, bg="#3f3e52", width=400, height=700)
-# Agregar un borde al frame de información
-# frame2.config(relief="groove", borderwidth=2, padx=20, pady=10)
+# frame3 = tk.Frame(root, bg="blue", width=500, height=700)
 
-
-frame3 = tk.Frame(root, bg="blue", width=500, height=700)
+#frame_buttons.pack(side=LEFT)
+#frame_parcel_add.pack(side=LEFT, padx=20)
+#frame_parcel_button.pack(side=LEFT, padx=20)
 
 # Alinear los frames en una fila vertical
+
+frame_buttons.pack(side="left", anchor="s")
+frame_parcel_add.pack(side="top", anchor="n")
+frame_parcel_button.pack(side="top", anchor="n")
+
 frame1.pack(side="left")
 frame2.pack(side="left")
-frame3.pack(side="left")
-frame_parcel_add.pack(side="top")
-frame_parcel_button.pack(side="bottom")
+#frame3.pack(side="left")
 
+# desactivar la posibilidad de cambiar el tamaño de la ventana
+root.resizable(width=False, height=False)
 
 def create_buttons():
     # Cambia el ancho del botón para que se ajuste a 3 botones por fila
@@ -252,23 +258,20 @@ def create_buttons():
 
         new_button.grid(row=row, column=col, padx=2, pady=2)
 
-    # Deshabilitar la posibilidad de cambiar de tamaño
-    root.resizable(0, 0)
-
 def create_single_button():
     mi_comunicacion.crear_potrero_default()
     new_parcel = mi_comunicacion.get_last_potrero_number() # FUNCIONA -> obtiene ultimo potrero ingresado
     resultado = mi_comunicacion.get_all_parcel_info(new_parcel)
-    
+
     # tomamos lo mismo de create_buttons
     btn_width = 15
     total_columns = 3
-    
+
     # row = int(resultado[0][1])+1 // total_columns
     row = (int(new_parcel)-1) // total_columns
     # col = int(resultado[0][1]) % total_columns   
     col = (int(new_parcel)-1) % total_columns   
-    
+
     new_button = MyButton(frame_parcel_button,
                         # ID = resultado = [0],
                         parcelNumber=resultado[0][1],
@@ -281,11 +284,11 @@ def create_single_button():
                         isActive=resultado[0][8],
                         grazinTime=resultado[0][9],
                         width=btn_width)
-    
+
     new_button.grid(row=row, column=col, padx=2, pady=2)
-    
-    
-    
+
+
+
     # crear boton trayendo los datos del recien creado y luego hacer la creacion como la funcion de crear todos los botones
     # create_buttons()
 
@@ -293,13 +296,17 @@ def delete_last_button():
     mi_comunicacion.delete_last_potrero()
     frame_parcel_button.winfo_children()[-1].destroy()
 
+def add_parcel_button_click():
+    create_single_button()
 
+def delete_parcel_button_click():
+    delete_last_button()
 
-create_button = tk.Button(frame_parcel_add, text="+ Crear Potrero", command=create_single_button)
-create_button.pack(pady=10, padx=10)
+create_button = tk.Button(frame_parcel_add, text="Agregar potrero", command=add_parcel_button_click)
+create_button.pack(side=LEFT, pady=7, padx=8)
 
-delete_button = tk.Button(frame_parcel_add, text="- Eliminar Potrero", command=delete_last_button)
-delete_button.pack(pady=10, padx=10)
+delete_button = tk.Button(frame_parcel_add, text="Eliminar último potrero", command=delete_parcel_button_click)
+delete_button.pack(side=LEFT, pady=7, padx=8)
 
 create_buttons()
 
