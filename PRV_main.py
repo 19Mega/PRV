@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import *
 from datetime import datetime
 
+
+
 from conexion_sqlite import Comunication
 from tkinter import messagebox
 
@@ -36,6 +38,8 @@ class MyButton(Button):
         self.grazinTime = grazinTime       
 
 
+        self.new_date_format = self.date_format(self.parcelLastGrazingDate)
+
         fecha_str = mi_comunicacion.get_parcelLastGrazingDate(parcelNumber) # agarramos 
         fecha = datetime.strptime(fecha_str, '%Y-%m-%d %H:%M:%S.%f')
         self.diferencia = datetime.now() - fecha
@@ -48,6 +52,9 @@ class MyButton(Button):
 
         if isActive: self.set_color_green()
         else: self.set_color_grey()
+        
+        
+        
 
 
     # COLOR BOTON: VERDE/ACTIVO
@@ -58,7 +65,7 @@ class MyButton(Button):
     # COLOR BOTON: GRIS/inACTIVO
     def set_color_grey(self):
         self.config(text=f"N° {self.parcelNumber}  Descanso: {self.restDays} Días\n{'Activo' if self.isActive else 'Inactivo'}",
-            font=("Arial", 9), fg="black", background="#9C9E9C", width=20, height=2, command=self.custom_callback)
+            font=("Arial", 9), fg="black", background="#d9d9db", width=20, height=2, command=self.custom_callback)
 
 
     # FUNCIONES
@@ -101,8 +108,6 @@ class MyButton(Button):
                 # actualiza boton de potreros
                 self.set_color_green()
 
-            else:
-                pass
 
     # PREGUNTA Terminar pastoreo
     def isActive_False(self):
@@ -120,14 +125,14 @@ class MyButton(Button):
 
             # actualiza parcelLastGrazingDate 
             mi_comunicacion.set_parcelLastGrazingDate(self.parcelNumber, datetime.now()) 
-            self.parcelLastGrazingDate = mi_comunicacion.get_parcelLastGrazingDate(self.parcelNumber)        
-            self.parcelLastGrazingDate_label.config(text=self.parcelLastGrazingDate)
+            self.parcelLastGrazingDate = mi_comunicacion.get_parcelLastGrazingDate(self.parcelNumber)
+            
+            self.parcelLastGrazingDate_label.config(text=self.new_date_format)
 
             # actualiza boton de potreros
             self.set_color_grey()
 
-        else:
-            pass
+
 
 
     # Elimina todos los widgets dentro del frame2.
@@ -135,59 +140,135 @@ class MyButton(Button):
         for widget in frame2.winfo_children():
             widget.destroy()
 
-
+    def date_format(self, parcelLastGrazingDate):
+        format_fecha = datetime.strptime(parcelLastGrazingDate, '%Y-%m-%d %H:%M:%S.%f')    
+        return(format_fecha.date())
+    
+    
+    # ENTRYs: parcelDescription, parcelSpecies, parcelStocking
+    def save_parcel_description(self):
+        new_parceDescription = self.parcelDescription_text.get("1.0", tk.END)
+        print("PRUEBA: ", new_parceDescription)
+        self.parcelDescription = new_parceDescription
+        mi_comunicacion.set_parcelDescription(self.parcelNumber, new_parceDescription)
+    
+    def save_parcel_species(self):
+        new_parcelSpecies = self.parcelSpecies_text.get("1.0", tk.END)
+        print("PRUEBA: ", new_parcelSpecies)
+        self.parcelSpecies = new_parcelSpecies
+        mi_comunicacion.set_parcelSpecies(self.parcelNumber, new_parcelSpecies)
+        
+        
+        
+        
 
     # CREA LA SECCION DE INFO (cuando clicleamos un potrero)
     def custom_callback(self):
-
         self.clear_frame2()
+        
+        # TITULO ROW = 0
+        Label(frame2, text="   Información del Pastoreo   ",relief="solid", font=("Arial", 22), anchor="e").grid(row=0, column=0, columnspan=3, sticky="s", pady=15, padx=15)
+        
+        # LINEA DE ESPACIO - ANCHO IDEAL DE LA SECCION INFO: height=500 - ROW = 1
+        Label(frame2, height=1, width=70, bg="#312f47").grid(row=1, column=0, columnspan=3, pady=0, padx=2)
+        
+        # parcelNumber title ROW = 2
+        Label(frame2, text="Potrero N°:", font=("Arial", 12), anchor="e").grid(row=2, column=0, sticky=W, pady=2, padx=(0, 10))
+        # parcelNumber ROW = 3
+        Label(frame2, text=self.parcelNumber, font=("Arial", 20),relief="groove", anchor="center",height=1,bg="#464463").grid(row=3, column=0, sticky="nswe", pady=1, padx=(0, 5))
+        # relief="solid" # borde
+        
+        # restDays ROW = 2 y ROW = 3
+        Label(frame2, text="Días de Descanso:", font=("Arial", 12)).grid(row=2, column=2, sticky=W, pady=2)
+        self.restDays_label = Label(frame2, text=self.restDays, font=("Arial", 20),relief="groove")
+        self.restDays_label.grid(row=3, column=2, sticky=W, pady=2)
+        
+        # LINEA DE ESPACIO GRUESA
+        # Label(frame2, height=10, width=0).grid(row=5, column=0, columnspan=3, pady=2)
+        
+        # ROW = 4
+        Label(frame2, height=1, width=70, bg="#312f47").grid(row=4, column=0, columnspan=3, pady=0, padx=2)
 
-        # parcelNumber
-        Label(frame2, text="Potrero:",relief="solid", font=("Arial", 12), anchor="e").grid(row=0, column=0, sticky=W, pady=10,)
-        Label(frame2, text=self.parcelNumber, relief="solid", font=("Arial", 12), anchor="w").grid(row=0, column=1, sticky=W, pady=2)
-
-        # parcelDescription
-        Label(frame2, text="Descripción de la Parcela:").grid(row=1, column=0, sticky=W, pady=2)
-        Label(frame2, text=self.parcelDescription, relief="sunken").grid(row=1, column=1, sticky=W, pady=2)
-
-        # parcelSize
-        Label(frame2, text="Tamaño de la Parcela:").grid(row=2, column=0, sticky=W, pady=2)
-        Label(frame2, text=f"{self.parcelSize} metros cuadrados", relief="sunken").grid(row=2, column=1, sticky=W, pady=2)
-
-        # parcelSpecies
-        Label(frame2, text="Especies en la Parcela:").grid(row=3, column=0, sticky=W, pady=2)
-        Label(frame2, text=self.parcelSpecies, relief="sunken").grid(row=3, column=1, sticky=W, pady=2)
-
-        # parcelStocking
-        Label(frame2, text="Adecuación del Pastoreo:").grid(row=4, column=0, sticky=W, pady=2)
-        Label(frame2, text=self.parcelStocking, relief="sunken").grid(row=4, column=1, sticky=W, pady=2)
-
-        # parcelLastGrazingDate
-        Label(frame2, text="Último Día de Pastoreo: ").grid(row=5, column=0, sticky=W, pady=2)
-        self.parcelLastGrazingDate_label = Label(frame2, text="Hoy, en pastoreo" if self.isActive else self.parcelLastGrazingDate, relief="sunken")
+        # parcelLastGrazingDate ROW = 5
+        Label(frame2, text="Último Día de Pastoreo: ",font=("Arial", 12)).grid(row=5, column=0, sticky=W, pady=0)
+        self.parcelLastGrazingDate_label = Label(frame2, text="Hoy, en pastoreo" if self.isActive else self.new_date_format, font=("Arial", 12))
         self.parcelLastGrazingDate_label.grid(row=5, column=1, sticky=W, pady=2)
 
-        # restDays
-        Label(frame2, text="Días de Descanso:").grid(row=6, column=0, sticky=W, pady=2)
-        self.restDays_label = Label(frame2, text=self.restDays, relief="sunken")
-        self.restDays_label.grid(row=6, column=1, sticky=W, pady=2)
+        # ROW = 6
+        Label(frame2, height=1, width=70, bg="#312f47").grid(row=6, column=0, columnspan=3, pady=0, padx=2)
 
-        # isActive
-        Label(frame2, text="Potrero Activo: ").grid(row=7, column=0, sticky=W, pady=2)
-        self.is_active_label = Label(frame2, text='Sí' if self.isActive else 'No', relief="sunken")
+        # isActive - ROW = 7
+        Label(frame2, text="Potrero en pastoreo: ",font=("Arial", 12)).grid(row=7, column=0, sticky=W, pady=2)
+        self.is_active_label = Label(frame2, text='Sí' if self.isActive else 'No', font=("Arial", 12))
         self.is_active_label.grid(row=7, column=1, sticky=W, pady=2)
 
-        Button(frame2, text="Empezar pastoreo", command=self.isActive_True).grid(row=7, column=2, sticky=W, pady=2)
-        Button(frame2, text="Terminar pastoreo", command=self.isActive_False).grid(row=8, column=2, sticky=W, pady=2)
+        # BOTONES ROW = 7 y ROW = 8
+        Button(frame2, text="Empezar pastoreo",font=("Arial", 10), command=self.isActive_True).grid(row=7, column=2, sticky=W, pady=2)
+        Button(frame2, text="Terminar pastoreo",font=("Arial", 10), command=self.isActive_False).grid(row=8, column=2, sticky=W, pady=2)
 
         # Label(frame2, text="Tiempo de Pastoreo:").grid(row=8, column=0, sticky=W, pady=2)
         # Label(frame2, text=f"{self.diferencia} horas/día", relief="sunken").grid(row=8, column=1, sticky=W, pady=2)
         # Label(frame2, text=f"{self.diferencia} horas/día", relief="sunken", font=("Arial", 16), padx=10, pady=10).grid(row=8, column=1, sticky=W)
 
-        Label(frame2, text="Tiempo de Pastoreo:").grid(row=8, column=0, sticky=W, pady=2)
-        self.grazin_time_label = Label(frame2, text="{} días, {}:{:02d}".format(self.diferencia.days, self.diferencia.seconds // 3600, (self.diferencia.seconds // 60) % 60), relief="sunken")
-        self.grazin_time_label.grid(row=8, column=1, sticky=W, pady=2)
+        Label(frame2, text="Tiempo de Pastoreo:", font=("Arial", 12)).grid(row=8, column=0, sticky=W, pady=2)
+        
+        if self.diferencia is not None:
+            self.grazin_time_label = Label(frame2, text="{} días, {}:{:02d}:{:02d}".format(self.diferencia.days, self.diferencia.seconds // 3600, (self.diferencia.seconds // 60) % 60, self.diferencia.seconds % 60), font=("Arial", 12))
+            self.grazin_time_label.grid(row=8, column=1, sticky=W, pady=2)
+        else:   
+            self.grazin_time_label = Label(frame2, text="00:00:00", font=("Arial", 12))
+            self.grazin_time_label.grid(row=8, column=1, sticky=W, pady=2)        
+        
         self.calcular_diferencia()
+        
+        # ROW = 9
+        Label(frame2, height=1, width=70, bg="#312f47").grid(row=9, column=0, columnspan=3, pady=0, padx=2)
+        
+        # parcelStocking ROW = 10
+        Label(frame2, text="Carga de animales: ", font=("Arial", 12)).grid(row=10, column=0, sticky=W, pady=2)
+        Label(frame2, text=self.parcelStocking, font=("Arial", 12)).grid(row=10, column=1, sticky=W, pady=2)
+        
+        # SUBTITLE ROW= 11
+        Label(frame2, text="   Información del Potrero   ",relief="solid", font=("Arial", 22), anchor="e").grid(row=11, column=0, columnspan=3, sticky="s", pady=10, padx=10)
+        
+        # parcelSize ROW = 12
+        Label(frame2, text="Tamaño: ", font=("Arial", 12)).grid(row=12, column=0, sticky=W, pady=2)
+        Label(frame2, text=f"{self.parcelSize} Hectáreas", font=("Arial", 12)).grid(row=12, column=1, sticky=W, pady=2)
+
+
+
+
+
+        # parcelSpecies ROW = 13
+        Label(frame2, text="Vegetación: " ,font=("Arial", 12)).grid(row=13, column=0, sticky=W, pady=2)
+        # Label(frame2, text=self.parcelSpecies, font=("Arial", 12)).grid(row=13, column=1, sticky=W, pady=2)
+        
+        self.parcelSpecies_text = Text(frame2, font=("Arial", 12), width=54,height=2, wrap="word")
+        self.parcelSpecies_text.insert("1.0", self.parcelSpecies)
+        self.parcelSpecies_text.grid(row=14, column=0, columnspan=3, pady=2)
+        
+        Button(frame2, text="<<< Guardar",font=("Arial", 11), command= self.save_parcel_species).grid(row=13, column=1, sticky=W, pady=2)
+        
+        
+        
+        
+        Label(frame2, height=1, width=70, bg="#312f47").grid(row=15, column=0, columnspan=3, pady=0, padx=2)
+        
+        
+        
+        # parcelDescription ROW = 15 y 16
+        Label(frame2, text="Descripción: ", font=("Arial", 12)).grid(row=16, column=0, sticky=W, pady=2)
+        # Entry(frame2, text=self.parcelDescription, font=("Arial", 12), width=54).grid(row=16, column=0, columnspan=3, pady=2)
+        # parcelDescription_label = 
+        self.parcelDescription_text = Text(frame2, font=("Arial", 12), width=54,height=4, wrap="word")
+        self.parcelDescription_text.insert("1.0", self.parcelDescription)
+        self.parcelDescription_text.grid(row=17, column=0, columnspan=3, pady=2)
+        
+        Button(frame2, text="<<< Guardar Descripción",font=("Arial", 11), command= self.save_parcel_description).grid(row=16, column=1, sticky=W, pady=2)
+
+        
+        # LINEA DE ESPACIO GRUESA
+        Label(frame2, height=3, width=0,bg="#312f47").grid(row=18, column=0, columnspan=3, pady=3)
 
         # para poner " - " en restDays
         if self.isActive : self.restDays_label.config(text=" - ")
@@ -205,11 +286,24 @@ root = tk.Tk()
 
 frame1 = tk.Frame(root, bg="#312f47")
 
-frame_buttons = tk.Frame(frame1, bg="red", width=10, height=700)
+frame_buttons = tk.Frame(frame1, bg="red", width=3, height=700) # LINEA FINITA
+
 frame_parcel_add = tk.Frame(frame1, bg="#312f47", width=350, height=150)
 frame_parcel_button = tk.Frame(frame1, bg="#312f47", width=400, height=550)
 
-frame2 = tk.Frame(root, bg="#3f3e52", width=400, height=700)
+frame_prueba = tk.Frame(frame1, bg="blue", width=3, height=700).pack(side="right") # LINEA FINITA
+
+frame2 = tk.Frame(root, bg="#312f47", width=500, height=700) # INFO SCREEN
+
+frame3 = tk.Frame(root, bg="pink", width=450, height=700).pack(side="right") # LINEA FINITA
+
+
+frame2.columnconfigure(0, weight=150)
+frame2.columnconfigure(1, weight=200)
+frame2.columnconfigure(2, weight=150)
+
+
+
 # frame3 = tk.Frame(root, bg="blue", width=500, height=700)
 
 #frame_buttons.pack(side=LEFT)
@@ -218,7 +312,7 @@ frame2 = tk.Frame(root, bg="#3f3e52", width=400, height=700)
 
 # Alinear los frames en una fila vertical
 
-frame_buttons.pack(side="left", anchor="s")
+frame_buttons.pack(side="left", anchor="e")
 frame_parcel_add.pack(side="top", anchor="n")
 frame_parcel_button.pack(side="top", anchor="n")
 
