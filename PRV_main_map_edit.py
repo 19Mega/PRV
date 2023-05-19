@@ -225,6 +225,6 @@ class App(tk.Frame): # hereda de la clase Frame
 
 
     # if __name__ == '__main__':
-root = tk.Tk()
-app = App(root)
-app.mainloop()
+#root = tk.Tk()
+#app = App(root)
+#app.mainloop()
