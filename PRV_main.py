@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from datetime import datetime
-
+from PRV_main_map_edit import App
 
 
 from conexion_sqlite import Comunication
@@ -10,6 +10,9 @@ from tkinter import messagebox
 mi_comunicacion = Comunication()
 mi_comunicacion.rest_days_update()
 
+main_color = "#CCCFCD"
+
+#312f47
 # ID, parcelNumber, parcelDescription, parcelSize, parcelSpecies, 
 # parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime
 
@@ -170,7 +173,7 @@ class MyButton(Button):
         Label(frame2, text="   Información del Pastoreo   ",relief="solid", font=("Arial", 22), anchor="e").grid(row=0, column=0, columnspan=3, sticky="s", pady=15, padx=15)
         
         # LINEA DE ESPACIO - ANCHO IDEAL DE LA SECCION INFO: height=500 - ROW = 1
-        Label(frame2, height=1, width=70, bg="#312f47").grid(row=1, column=0, columnspan=3, pady=0, padx=2)
+        Label(frame2, height=1, width=70, bg=main_color).grid(row=1, column=0, columnspan=3, pady=0, padx=2)
         
         # parcelNumber title ROW = 2
         Label(frame2, text="Potrero N°:", font=("Arial", 12), anchor="e").grid(row=2, column=0, sticky=W, pady=2, padx=(0, 10))
@@ -187,7 +190,7 @@ class MyButton(Button):
         # Label(frame2, height=10, width=0).grid(row=5, column=0, columnspan=3, pady=2)
         
         # ROW = 4
-        Label(frame2, height=1, width=70, bg="#312f47").grid(row=4, column=0, columnspan=3, pady=0, padx=2)
+        Label(frame2, height=1, width=70, bg=main_color).grid(row=4, column=0, columnspan=3, pady=0, padx=2)
 
         # parcelLastGrazingDate ROW = 5
         Label(frame2, text="Último Día de Pastoreo: ",font=("Arial", 12)).grid(row=5, column=0, sticky=W, pady=0)
@@ -195,7 +198,7 @@ class MyButton(Button):
         self.parcelLastGrazingDate_label.grid(row=5, column=1, sticky=W, pady=2)
 
         # ROW = 6
-        Label(frame2, height=1, width=70, bg="#312f47").grid(row=6, column=0, columnspan=3, pady=0, padx=2)
+        Label(frame2, height=1, width=70, bg=main_color).grid(row=6, column=0, columnspan=3, pady=0, padx=2)
 
         # isActive - ROW = 7
         Label(frame2, text="Potrero en pastoreo: ",font=("Arial", 12)).grid(row=7, column=0, sticky=W, pady=2)
@@ -222,7 +225,7 @@ class MyButton(Button):
         self.calcular_diferencia()
         
         # ROW = 9
-        Label(frame2, height=1, width=70, bg="#312f47").grid(row=9, column=0, columnspan=3, pady=0, padx=2)
+        Label(frame2, height=1, width=70, bg=main_color).grid(row=9, column=0, columnspan=3, pady=0, padx=2)
         
         # parcelStocking ROW = 10
         Label(frame2, text="Carga de animales: ", font=("Arial", 12)).grid(row=10, column=0, sticky=W, pady=2)
@@ -252,7 +255,7 @@ class MyButton(Button):
         
         
         
-        Label(frame2, height=1, width=70, bg="#312f47").grid(row=15, column=0, columnspan=3, pady=0, padx=2)
+        Label(frame2, height=1, width=70, bg=main_color).grid(row=15, column=0, columnspan=3, pady=0, padx=2)
         
         
         
@@ -268,7 +271,7 @@ class MyButton(Button):
 
         
         # LINEA DE ESPACIO GRUESA
-        Label(frame2, height=3, width=0,bg="#312f47").grid(row=18, column=0, columnspan=3, pady=3)
+        Label(frame2, height=3, width=0,bg=main_color).grid(row=18, column=0, columnspan=3, pady=3)
 
         # para poner " - " en restDays
         if self.isActive : self.restDays_label.config(text=" - ")
@@ -284,18 +287,20 @@ root = tk.Tk()
 
 # Crear los tres frames (secciones verticales)
 
-frame1 = tk.Frame(root, bg="#312f47")
+frame1 = tk.Frame(root, bg=main_color)
 
 frame_buttons = tk.Frame(frame1, bg="red", width=3, height=700) # LINEA FINITA
 
-frame_parcel_add = tk.Frame(frame1, bg="#312f47", width=350, height=150)
-frame_parcel_button = tk.Frame(frame1, bg="#312f47", width=400, height=550)
+frame_parcel_add = tk.Frame(frame1, bg=main_color, width=350, height=150)
+frame_parcel_button = tk.Frame(frame1, bg=main_color, width=400, height=550)
 
 frame_prueba = tk.Frame(frame1, bg="blue", width=3, height=700).pack(side="right") # LINEA FINITA
 
-frame2 = tk.Frame(root, bg="#312f47", width=500, height=700) # INFO SCREEN
+frame2 = tk.Frame(root, bg=main_color, width=500, height=700) # INFO SCREEN
 
-frame3 = tk.Frame(root, bg="pink", width=450, height=700).pack(side="right") # LINEA FINITA
+frame3 = tk.Frame(root, bg="pink", width=0, height=0).pack(side="right") # LINEA FINITA
+
+
 
 
 frame2.columnconfigure(0, weight=150)
@@ -403,6 +408,10 @@ delete_button = tk.Button(frame_parcel_add, text="Eliminar último potrero", com
 delete_button.pack(side=LEFT, pady=7, padx=8)
 
 create_buttons()
+
+
+app = App(frame3)
+app.pack()
 
 # Mostrar la ventana
 root.mainloop()
