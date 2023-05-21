@@ -288,20 +288,17 @@ root = tk.Tk()
 # Crear los tres frames (secciones verticales)
 
 frame1 = tk.Frame(root, bg=main_color)
-
 frame_buttons = tk.Frame(frame1, bg="red", width=3, height=700) # LINEA FINITA
-
 frame_parcel_add = tk.Frame(frame1, bg=main_color, width=350, height=150)
 frame_parcel_button = tk.Frame(frame1, bg=main_color, width=400, height=550)
 
-frame_prueba = tk.Frame(frame1, bg="blue", width=3, height=700).pack(side="right") # LINEA FINITA
+frame_prueba = tk.Frame(frame1, bg="blue", width=3, height=700)
+frame_prueba.pack(side="right") # LINEA FINITA
 
 frame2 = tk.Frame(root, bg=main_color, width=500, height=700) # INFO SCREEN
 
-frame3 = tk.Frame(root, bg="pink", width=0, height=0).pack(side="right") # LINEA FINITA
-
-
-
+frame3 = tk.Frame(root, bg="pink", width=0, height=0)
+frame3.pack(side="right")
 
 frame2.columnconfigure(0, weight=150)
 frame2.columnconfigure(1, weight=200)
