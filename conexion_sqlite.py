@@ -5,9 +5,6 @@
 # conexion.commit() # guarda bd
 # conexion.close() # cierra bd
 
-# def __init__(self, parcelNumber = None, parcelDescription = None, parcelSize = None, parcelSpecies = None,
-#              parcelStocking = None, parcelLastGrazingDate = None, restDays = None, isActive = None, grazinTime = None):
-
 from datetime import datetime
 import sqlite3
 from tkinter import *
@@ -67,18 +64,6 @@ class Comunication():
             bd_2 = "UPDATE campo SET restDays = ? WHERE parcelNumber = ?"
             cursor.execute(bd_2, (restDays, parcelNumber))
             self.conexion.commit()
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     # GENERAL FUNCTIONS
