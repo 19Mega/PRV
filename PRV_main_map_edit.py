@@ -24,9 +24,6 @@ class App(tk.Frame): # hereda de la clase Frame
         # Intenta cargar los datos previos del archivo JSON
         self.load_data()
 
-        # hasta aca ejecuta cuando creamos un objeto del tipo app
-        # despues tiene las funciones que se actival al interactuar con la ventana
-
 
     def create_widgets(self):
         # Coloca la ruta de la imagen manualmente
@@ -55,7 +52,6 @@ class App(tk.Frame): # hereda de la clase Frame
         self.borrar_lines_button = tk.Button(self, text="Borrar lineas", command=self.borrar_lines)
         self.borrar_lines_button.pack(side="left")
 
-        # Vincula eventos del mouse en el canvas
         self.canvas.bind("<Button-1>", self.canvas_left_click) # 
         self.canvas.bind("<ButtonRelease-1>", self.canvas_left_release)
         self.canvas.bind("<B1-Motion>", self.canvas_left_drag)
@@ -73,7 +69,7 @@ class App(tk.Frame): # hereda de la clase Frame
 
     #self.canvas.bind("<Button-1>", self.canvas_left_click) 
     def canvas_left_click(self, event):
-        # Si se ha pulsado el boton de colocar numero
+
         if self.mode == "number":
             # Obtiene las coordenadas del clic
             x, y = event.x, event.y
@@ -105,7 +101,6 @@ class App(tk.Frame): # hereda de la clase Frame
 
     # self.canvas.bind("<ButtonRelease-1>", self.canvas_left_release)
     def canvas_left_release(self, event):
-        # Si se ha pulsado el boton de dibujar linea
         if self.mode == "line":
             # Obtiene las coordenadas del release
             x, y = event.x, event.y
@@ -158,12 +153,9 @@ class App(tk.Frame): # hereda de la clase Frame
 
     def load_data(self):
         try:
-            # Si hay un archivo JSON, carga los datos previos
             with open("data.json", "r") as f:
                 data = json.load(f)
-
                 self.number_positions = data["numbers"]
-
                 self.lines = data["lines"]
                 self.next_number = len(self.number_positions)+1
 
@@ -184,7 +176,6 @@ class App(tk.Frame): # hereda de la clase Frame
             pass
 
     def save_data(self):
-        # Crea el diccionario para guardar la informacion
         data = {
             "numbers": self.number_positions,
             "lines": self.lines
@@ -196,7 +187,6 @@ class App(tk.Frame): # hereda de la clase Frame
 
 
     def borrar_numeros(self):
-        # Elimina solo los numeros del canvas y del archivo data.json
         self.canvas.delete("numbers")
         self.number_positions = []
 
@@ -211,7 +201,6 @@ class App(tk.Frame): # hereda de la clase Frame
         self.next_number = 1
 
     def borrar_lines(self):
-        # Elimina solo las lineas del canvas y del archivo data.json
         self.canvas.delete("lines")
         self.lines = []
 
