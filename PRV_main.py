@@ -42,7 +42,8 @@ class MyButton(Button):
 
 
         self.new_date_format = self.date_format(self.parcelLastGrazingDate)
-
+        
+        
         fecha_str = mi_comunicacion.get_parcelLastGrazingDate(parcelNumber) # agarramos 
         fecha = datetime.strptime(fecha_str, '%Y-%m-%d %H:%M:%S.%f')
         self.diferencia = datetime.now() - fecha
@@ -130,7 +131,7 @@ class MyButton(Button):
             mi_comunicacion.set_parcelLastGrazingDate(self.parcelNumber, datetime.now()) 
             self.parcelLastGrazingDate = mi_comunicacion.get_parcelLastGrazingDate(self.parcelNumber)
             
-            self.parcelLastGrazingDate_label.config(text=self.new_date_format)
+            self.parcelLastGrazingDate_label.config(text=(self.new_date_format.day ,"/", self.new_date_format.month, "/",self.new_date_format.year))
 
             # actualiza boton de potreros
             self.set_color_grey()
@@ -170,39 +171,36 @@ class MyButton(Button):
         self.clear_frame2()
         
         # TITULO ROW = 0
-        Label(frame2, text="   Información del Pastoreo   ",relief="solid", font=("Arial", 22), anchor="e").grid(row=0, column=0, columnspan=3, sticky="s", pady=15, padx=15)
+        Label(frame2, text="   Información del Pastoreo   ",relief="solid", font=("Arial", 22), anchor="e", bg=main_color).grid(row=0, column=0, columnspan=3, sticky="s", pady=15, padx=15)
         
         # LINEA DE ESPACIO - ANCHO IDEAL DE LA SECCION INFO: height=500 - ROW = 1
         Label(frame2, height=1, width=70, bg=main_color).grid(row=1, column=0, columnspan=3, pady=0, padx=2)
         
         # parcelNumber title ROW = 2
-        Label(frame2, text="Potrero N°:", font=("Arial", 12), anchor="e").grid(row=2, column=0, sticky=W, pady=2, padx=(0, 10))
+        Label(frame2, text="Potrero N°:", font=("Arial", 12), anchor="e",  bg=main_color).grid(row=2, column=0, sticky=W, pady=2, padx=(0, 10))
         # parcelNumber ROW = 3
-        Label(frame2, text=self.parcelNumber, font=("Arial", 20),relief="groove", anchor="center",height=1,bg="#464463").grid(row=3, column=0, sticky="nswe", pady=1, padx=(0, 5))
+        Label(frame2, text=self.parcelNumber, font=("Arial", 20),relief="groove", anchor="center",height=1, bg=main_color).grid(row=3, column=0, sticky="nswe", pady=1, padx=(0, 5))
         # relief="solid" # borde
         
         # restDays ROW = 2 y ROW = 3
-        Label(frame2, text="Días de Descanso:", font=("Arial", 12)).grid(row=2, column=2, sticky=W, pady=2)
-        self.restDays_label = Label(frame2, text=self.restDays, font=("Arial", 20),relief="groove")
+        Label(frame2, text="Días de Descanso:", font=("Arial", 12),  bg=main_color).grid(row=2, column=2, sticky=W, pady=2)
+        self.restDays_label = Label(frame2, text=self.restDays, font=("Arial", 20),relief="groove", bg= main_color)
         self.restDays_label.grid(row=3, column=2, sticky=W, pady=2)
-        
-        # LINEA DE ESPACIO GRUESA
-        # Label(frame2, height=10, width=0).grid(row=5, column=0, columnspan=3, pady=2)
         
         # ROW = 4
         Label(frame2, height=1, width=70, bg=main_color).grid(row=4, column=0, columnspan=3, pady=0, padx=2)
 
         # parcelLastGrazingDate ROW = 5
-        Label(frame2, text="Último Día de Pastoreo: ",font=("Arial", 12)).grid(row=5, column=0, sticky=W, pady=0)
-        self.parcelLastGrazingDate_label = Label(frame2, text="Hoy, en pastoreo" if self.isActive else self.new_date_format, font=("Arial", 12))
+        Label(frame2, text="Último Día de Pastoreo: ",font=("Arial", 12), bg=main_color).grid(row=5, column=0, sticky=W, pady=0)
+        self.parcelLastGrazingDate_label = Label(frame2, text="Hoy, en pastoreo" if self.isActive else (self.new_date_format.day ,"/", self.new_date_format.month, "/",self.new_date_format.year), font=("Arial", 12), bg=main_color)
         self.parcelLastGrazingDate_label.grid(row=5, column=1, sticky=W, pady=2)
 
         # ROW = 6
         Label(frame2, height=1, width=70, bg=main_color).grid(row=6, column=0, columnspan=3, pady=0, padx=2)
 
         # isActive - ROW = 7
-        Label(frame2, text="Potrero en pastoreo: ",font=("Arial", 12)).grid(row=7, column=0, sticky=W, pady=2)
-        self.is_active_label = Label(frame2, text='Sí' if self.isActive else 'No', font=("Arial", 12))
+        Label(frame2, text="Potrero en pastoreo: ",font=("Arial", 12),  bg=main_color).grid(row=7, column=0, sticky=W, pady=2)
+        self.is_active_label = Label(frame2, text='Sí' if self.isActive else 'No', font=("Arial", 12), bg=main_color)
         self.is_active_label.grid(row=7, column=1, sticky=W, pady=2)
 
         # BOTONES ROW = 7 y ROW = 8
@@ -213,13 +211,13 @@ class MyButton(Button):
         # Label(frame2, text=f"{self.diferencia} horas/día", relief="sunken").grid(row=8, column=1, sticky=W, pady=2)
         # Label(frame2, text=f"{self.diferencia} horas/día", relief="sunken", font=("Arial", 16), padx=10, pady=10).grid(row=8, column=1, sticky=W)
 
-        Label(frame2, text="Tiempo de Pastoreo:", font=("Arial", 12)).grid(row=8, column=0, sticky=W, pady=2)
+        Label(frame2, text="Tiempo de Pastoreo:", font=("Arial", 12),  bg=main_color).grid(row=8, column=0, sticky=W, pady=2)
         
         if self.diferencia is not None:
-            self.grazin_time_label = Label(frame2, text="{} días, {}:{:02d}:{:02d}".format(self.diferencia.days, self.diferencia.seconds // 3600, (self.diferencia.seconds // 60) % 60, self.diferencia.seconds % 60), font=("Arial", 12))
+            self.grazin_time_label = Label(frame2, text="{} días, {}:{:02d}:{:02d}".format(self.diferencia.days, self.diferencia.seconds // 3600, (self.diferencia.seconds // 60) % 60, self.diferencia.seconds % 60), font=("Arial", 12), bg=main_color)
             self.grazin_time_label.grid(row=8, column=1, sticky=W, pady=2)
         else:   
-            self.grazin_time_label = Label(frame2, text="00:00:00", font=("Arial", 12))
+            self.grazin_time_label = Label(frame2, text="00:00:00", font=("Arial", 12), bg=main_color)
             self.grazin_time_label.grid(row=8, column=1, sticky=W, pady=2)        
         
         self.calcular_diferencia()
@@ -228,14 +226,14 @@ class MyButton(Button):
         Label(frame2, height=1, width=70, bg=main_color).grid(row=9, column=0, columnspan=3, pady=0, padx=2)
         
         # parcelStocking ROW = 10
-        Label(frame2, text="Carga de animales: ", font=("Arial", 12)).grid(row=10, column=0, sticky=W, pady=2)
+        Label(frame2, text="Carga de animales: ", font=("Arial", 12), bg=main_color).grid(row=10, column=0, sticky=W, pady=2)
         Label(frame2, text=self.parcelStocking, font=("Arial", 12)).grid(row=10, column=1, sticky=W, pady=2)
         
         # SUBTITLE ROW= 11
-        Label(frame2, text="   Información del Potrero   ",relief="solid", font=("Arial", 22), anchor="e").grid(row=11, column=0, columnspan=3, sticky="s", pady=10, padx=10)
+        Label(frame2, text="   Información del Potrero   ",relief="solid", font=("Arial", 22), anchor="e",  bg=main_color).grid(row=11, column=0, columnspan=3, sticky="s", pady=10, padx=10)
         
         # parcelSize ROW = 12
-        Label(frame2, text="Tamaño: ", font=("Arial", 12)).grid(row=12, column=0, sticky=W, pady=2)
+        Label(frame2, text="Tamaño: ", font=("Arial", 12),  bg=main_color).grid(row=12, column=0, sticky=W, pady=2)
         Label(frame2, text=f"{self.parcelSize} Hectáreas", font=("Arial", 12)).grid(row=12, column=1, sticky=W, pady=2)
 
 
@@ -243,14 +241,14 @@ class MyButton(Button):
 
 
         # parcelSpecies ROW = 13
-        Label(frame2, text="Vegetación: " ,font=("Arial", 12)).grid(row=13, column=0, sticky=W, pady=2)
+        Label(frame2, text="Vegetación: " ,font=("Arial", 12), bg=main_color).grid(row=13, column=0, sticky=W, pady=2)
         # Label(frame2, text=self.parcelSpecies, font=("Arial", 12)).grid(row=13, column=1, sticky=W, pady=2)
         
         self.parcelSpecies_text = Text(frame2, font=("Arial", 12), width=54,height=2, wrap="word")
         self.parcelSpecies_text.insert("1.0", self.parcelSpecies)
         self.parcelSpecies_text.grid(row=14, column=0, columnspan=3, pady=2)
         
-        Button(frame2, text="<<< Guardar",font=("Arial", 11), command= self.save_parcel_species).grid(row=13, column=1, sticky=W, pady=2)
+        Button(frame2, text="Guardar Vegetación",font=("Arial", 11), command= self.save_parcel_species).grid(row=13, column=2, sticky=W, pady=2)
         
         
         
@@ -260,14 +258,14 @@ class MyButton(Button):
         
         
         # parcelDescription ROW = 15 y 16
-        Label(frame2, text="Descripción: ", font=("Arial", 12)).grid(row=16, column=0, sticky=W, pady=2)
+        Label(frame2, text="Descripción: ", font=("Arial", 12),  bg=main_color).grid(row=16, column=0, sticky=W, pady=2)
         # Entry(frame2, text=self.parcelDescription, font=("Arial", 12), width=54).grid(row=16, column=0, columnspan=3, pady=2)
         # parcelDescription_label = 
         self.parcelDescription_text = Text(frame2, font=("Arial", 12), width=54,height=4, wrap="word")
         self.parcelDescription_text.insert("1.0", self.parcelDescription)
         self.parcelDescription_text.grid(row=17, column=0, columnspan=3, pady=2)
         
-        Button(frame2, text="<<< Guardar Descripción",font=("Arial", 11), command= self.save_parcel_description).grid(row=16, column=1, sticky=W, pady=2)
+        Button(frame2, text="Guardar Descripción",font=("Arial", 11), command= self.save_parcel_description).grid(row=16, column=2, sticky=W, pady=2)
 
         
         # LINEA DE ESPACIO GRUESA
