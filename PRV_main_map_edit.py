@@ -24,6 +24,9 @@ class App(tk.Frame): # hereda de la clase Frame
         # Intenta cargar los datos previos del archivo JSON
         self.load_data()
 
+        # hasta aca ejecuta cuando creamos un objeto del tipo app
+        # despues tiene las funciones que se actival al interactuar con la ventana
+
 
     def create_widgets(self):
         # Coloca la ruta de la imagen manualmente
@@ -52,6 +55,7 @@ class App(tk.Frame): # hereda de la clase Frame
         self.borrar_lines_button = tk.Button(self, text="Borrar lineas", command=self.borrar_lines)
         self.borrar_lines_button.pack(side="left")
 
+        # Vincula eventos del mouse en el canvas
         self.canvas.bind("<Button-1>", self.canvas_left_click) # 
         self.canvas.bind("<ButtonRelease-1>", self.canvas_left_release)
         self.canvas.bind("<B1-Motion>", self.canvas_left_drag)
@@ -69,7 +73,7 @@ class App(tk.Frame): # hereda de la clase Frame
 
     #self.canvas.bind("<Button-1>", self.canvas_left_click) 
     def canvas_left_click(self, event):
-
+        # Si se ha pulsado el boton de colocar numero
         if self.mode == "number":
             # Obtiene las coordenadas del clic
             x, y = event.x, event.y
@@ -83,7 +87,8 @@ class App(tk.Frame): # hereda de la clase Frame
             # Dibuja el numero en la capa "numbers"
                                 #   ubicacion, texto, color, tag del archivo json
             self.canvas.create_text(x, y, text=str(self.next_number), fill='white', tags="numbers", font=("Arial", 11))
-
+            
+            
             #test
             total_de_numeros = len(self.number_positions)
             print(total_de_numeros)
@@ -101,6 +106,7 @@ class App(tk.Frame): # hereda de la clase Frame
 
     # self.canvas.bind("<ButtonRelease-1>", self.canvas_left_release)
     def canvas_left_release(self, event):
+        # Si se ha pulsado el boton de dibujar linea
         if self.mode == "line":
             # Obtiene las coordenadas del release
             x, y = event.x, event.y
@@ -153,15 +159,19 @@ class App(tk.Frame): # hereda de la clase Frame
 
     def load_data(self):
         try:
+            # Si hay un archivo JSON, carga los datos previos
             with open("data.json", "r") as f:
                 data = json.load(f)
+
                 self.number_positions = data["numbers"]
+
                 self.lines = data["lines"]
                 self.next_number = len(self.number_positions)+1
 
                 # Dibuja los numeros previamente guardados en la capa "numbers"
                 self.canvas.create_text(0, 0, text="", tags="numbers", font=("Arial", 11))
 
+                # ACA AGREGA LOS NUMEROS, HAY QUE PINTAR UNO DE ROJO
                 numero_potrero = 1
                 for pos, i in zip(self.number_positions, range(self.next_number, len(self.number_positions)+self.next_number)):
                     self.canvas.create_text(pos[0], pos[1], text=str(numero_potrero), fill='white', tags="numbers", font=("Arial", 11))
@@ -176,6 +186,7 @@ class App(tk.Frame): # hereda de la clase Frame
             pass
 
     def save_data(self):
+        # Crea el diccionario para guardar la informacion
         data = {
             "numbers": self.number_positions,
             "lines": self.lines
@@ -187,6 +198,7 @@ class App(tk.Frame): # hereda de la clase Frame
 
 
     def borrar_numeros(self):
+        # Elimina solo los numeros del canvas y del archivo data.json
         self.canvas.delete("numbers")
         self.number_positions = []
 
@@ -201,6 +213,7 @@ class App(tk.Frame): # hereda de la clase Frame
         self.next_number = 1
 
     def borrar_lines(self):
+        # Elimina solo las lineas del canvas y del archivo data.json
         self.canvas.delete("lines")
         self.lines = []
 
@@ -211,9 +224,13 @@ class App(tk.Frame): # hereda de la clase Frame
 
         with open("data.json", "w") as f:
             json.dump(data, f)
+            
+
 
 
     # if __name__ == '__main__':
-#root = tk.Tk()
-#app = App(root)
-#app.mainloop()
+# root = tk.Tk()
+# app = App(root)
+# app.mainloop()
+
+
