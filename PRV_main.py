@@ -10,9 +10,15 @@ from tkinter import messagebox
 mi_comunicacion = Comunication()
 mi_comunicacion.rest_days_update()
 
-main_color = "#CCCFCD"
+main_color = "#C6D8C2"
+boton_color = "#F0F3ED"
 
-#312f47
+# main_color = "#CCCFCD" ORIGINAL
+#5F6F5B : Verde oscuro
+#538C45 : Verde de botones
+#312f47 : Azul oscuro antiguo
+
+
 # ID, parcelNumber, parcelDescription, parcelSize, parcelSpecies, 
 # parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime
 
@@ -63,13 +69,17 @@ class MyButton(Button):
 
     # COLOR BOTON: VERDE/ACTIVO
     def set_color_green(self):
-        self.config(text=f"N° {self.parcelNumber}  Descanso: {self.restDays} Días\n{'Activo' if self.isActive else 'Inactivo'}",
-            font=("Arial", 9), fg="white", background="#5E6DA9", width=20, height=2, command=self.custom_callback)
+        #self.config(text=f"N° {self.parcelNumber}  Descanso: {self.restDays} Días\n{'Activo' if self.isActive else 'Inactivo'}",
+        #    font=("Arial", 9), fg="white", background="#5E6DA9", width=20, height=2, command=self.custom_callback)
+        
+        self.config(text=f"N° {self.parcelNumber}  Descanso: 0 Días \n{'EN PASTOREO' if self.isActive else 'Inactivo'}",
+            font=("Arial", 9), fg="white", background="#538C45", width=20, height=2, command=self.custom_callback)
+
 
     # COLOR BOTON: GRIS/inACTIVO
     def set_color_grey(self):
         self.config(text=f"N° {self.parcelNumber}  Descanso: {self.restDays} Días\n{'Activo' if self.isActive else 'Inactivo'}",
-            font=("Arial", 9), fg="black", background="#d9d9db", width=20, height=2, command=self.custom_callback)
+            font=("Arial", 9), fg="black", background="#D4D4D4", width=20, height=2, command=self.custom_callback)
 
 
     # FUNCIONES
@@ -122,16 +132,15 @@ class MyButton(Button):
             mi_comunicacion.set_isActive(self.parcelNumber, self.isActive) 
             self.is_active_label.config(text='Sí' if self.isActive else 'No')
 
-            # actualizar el rest days
-            mi_comunicacion.rest_days_update()
-            self.restDays = mi_comunicacion.get_restDays(self.parcelNumber)                
-            self.restDays_label.config(text=self.restDays)
-
             # actualiza parcelLastGrazingDate 
             mi_comunicacion.set_parcelLastGrazingDate(self.parcelNumber, datetime.now()) 
-            self.parcelLastGrazingDate = mi_comunicacion.get_parcelLastGrazingDate(self.parcelNumber)
-            
+            self.parcelLastGrazingDate = mi_comunicacion.get_parcelLastGrazingDate(self.parcelNumber)            
             self.parcelLastGrazingDate_label.config(text=(self.new_date_format.day ,"/", self.new_date_format.month, "/",self.new_date_format.year))
+
+            # actualizar el rest days
+            mi_comunicacion.rest_days_update()
+            self.restDays = mi_comunicacion.get_restDays(self.parcelNumber) 
+            self.restDays_label.config(text=self.restDays)
 
             # actualiza boton de potreros
             self.set_color_grey()
@@ -149,7 +158,7 @@ class MyButton(Button):
         return(format_fecha.date())
     
     
-    # ENTRYs: parcelDescription, parcelSpecies, parcelStocking
+    # ENTRYs: parcelDescription, parcelSpecies, parcelStocking, parcelSize
     def save_parcel_description(self):
         new_parceDescription = self.parcelDescription_text.get("1.0", tk.END)
         print("PRUEBA: ", new_parceDescription)
@@ -162,8 +171,19 @@ class MyButton(Button):
         self.parcelSpecies = new_parcelSpecies
         mi_comunicacion.set_parcelSpecies(self.parcelNumber, new_parcelSpecies)
         
+    def save_parcel_stocking(self):
+        new_parcelStocking = self.parcelStocking_text.get("1.0", tk.END)
+        print("PRUEBA: ", new_parcelStocking)
+        self.parcelStocking = new_parcelStocking
+        mi_comunicacion.set_parcelStocking(self.parcelNumber, new_parcelStocking)
+        # mi_comunicacion.set_parcelStockingForAll(self.parcelStocking) 
+        # Funcion para actualizar todos, no actualiza los de los otros potreros, solo cuando se reinicia 
         
-        
+    def save_parcel_Size(self):
+        new_parcelSize = self.parcelSize_text.get("1.0", tk.END)
+        print("PRUEBA: ", new_parcelSize)
+        self.parcelSize = new_parcelSize
+        mi_comunicacion.set_parcelSize(self.parcelNumber, new_parcelSize)    
         
 
     # CREA LA SECCION DE INFO (cuando clicleamos un potrero)
@@ -174,7 +194,7 @@ class MyButton(Button):
         Label(frame2, text="   Información del Pastoreo   ",relief="solid", font=("Arial", 22), anchor="e", bg=main_color).grid(row=0, column=0, columnspan=3, sticky="s", pady=15, padx=15)
         
         # LINEA DE ESPACIO - ANCHO IDEAL DE LA SECCION INFO: height=500 - ROW = 1
-        Label(frame2, height=1, width=70, bg=main_color).grid(row=1, column=0, columnspan=3, pady=0, padx=2)
+        # Label(frame2, height=0, width=70, bg=main_color).grid(row=1, column=0, columnspan=3, pady=0, padx=2)
         
         # parcelNumber title ROW = 2
         Label(frame2, text="Potrero N°:", font=("Arial", 12), anchor="e",  bg=main_color).grid(row=2, column=0, sticky=W, pady=2, padx=(0, 10))
@@ -204,8 +224,8 @@ class MyButton(Button):
         self.is_active_label.grid(row=7, column=1, sticky=W, pady=2)
 
         # BOTONES ROW = 7 y ROW = 8
-        Button(frame2, text="Empezar pastoreo",font=("Arial", 10), command=self.isActive_True).grid(row=7, column=2, sticky=W, pady=2)
-        Button(frame2, text="Terminar pastoreo",font=("Arial", 10), command=self.isActive_False).grid(row=8, column=2, sticky=W, pady=2)
+        Button(frame2, text="Empezar pastoreo",font=("Arial", 10), command=self.isActive_True, background=boton_color).grid(row=7, column=2, sticky=W, pady=2)
+        Button(frame2, text="Terminar pastoreo",font=("Arial", 10), command=self.isActive_False, background=boton_color).grid(row=8, column=2, sticky=W, pady=2)
 
         # Label(frame2, text="Tiempo de Pastoreo:").grid(row=8, column=0, sticky=W, pady=2)
         # Label(frame2, text=f"{self.diferencia} horas/día", relief="sunken").grid(row=8, column=1, sticky=W, pady=2)
@@ -227,35 +247,39 @@ class MyButton(Button):
         
         # parcelStocking ROW = 10
         Label(frame2, text="Carga de animales: ", font=("Arial", 12), bg=main_color).grid(row=10, column=0, sticky=W, pady=2)
-        Label(frame2, text=self.parcelStocking, font=("Arial", 12)).grid(row=10, column=1, sticky=W, pady=2)
+        
+        self.parcelStocking_text = Text(frame2, font=("Arial", 12), width=5,height=1, wrap="word")
+        self.parcelStocking_text.insert("1.0", self.parcelStocking)
+        self.parcelStocking_text.grid(row=10, column=1, pady=2, sticky="w")
+        
+        Button(frame2, text="Guardar Lote",font=("Arial", 10), command= self.save_parcel_stocking, background=boton_color).grid(row=10, column=2, sticky=W, pady=2)
+        
+        # Label(frame2, text=self.parcelStocking, font=("Arial", 12)).grid(row=10, column=1, sticky=W, pady=2)
         
         # SUBTITLE ROW= 11
         Label(frame2, text="   Información del Potrero   ",relief="solid", font=("Arial", 22), anchor="e",  bg=main_color).grid(row=11, column=0, columnspan=3, sticky="s", pady=10, padx=10)
         
         # parcelSize ROW = 12
-        Label(frame2, text="Tamaño: ", font=("Arial", 12),  bg=main_color).grid(row=12, column=0, sticky=W, pady=2)
-        Label(frame2, text=f"{self.parcelSize} Hectáreas", font=("Arial", 12)).grid(row=12, column=1, sticky=W, pady=2)
-
-
-
-
+        Label(frame2, text="Tamaño en Ha: ", font=("Arial", 12),  bg=main_color).grid(row=12, column=0, sticky=W, pady=2)
+        # Label(frame2, text=f"{self.parcelSize} Hectáreas", font=("Arial", 12)).grid(row=12, column=1, sticky=W, pady=2)
+        
+        self.parcelSize_text = Text(frame2, font=("Arial", 12), width=5,height=1, wrap="word")
+        self.parcelSize_text.insert("1.0", self.parcelSize)
+        self.parcelSize_text.grid(row=12, column=1, pady=2, sticky="w")
+        
+        Button(frame2, text="Guardar Tamaño",font=("Arial", 10), command= self.save_parcel_Size, background=boton_color).grid(row=12, column=2, sticky=W, pady=2)
 
         # parcelSpecies ROW = 13
         Label(frame2, text="Vegetación: " ,font=("Arial", 12), bg=main_color).grid(row=13, column=0, sticky=W, pady=2)
         # Label(frame2, text=self.parcelSpecies, font=("Arial", 12)).grid(row=13, column=1, sticky=W, pady=2)
         
-        self.parcelSpecies_text = Text(frame2, font=("Arial", 12), width=54,height=2, wrap="word")
+        self.parcelSpecies_text = Text(frame2, font=("Arial", 12), width=54,height=4, wrap="word")
         self.parcelSpecies_text.insert("1.0", self.parcelSpecies)
         self.parcelSpecies_text.grid(row=14, column=0, columnspan=3, pady=2)
         
-        Button(frame2, text="Guardar Vegetación",font=("Arial", 11), command= self.save_parcel_species).grid(row=13, column=2, sticky=W, pady=2)
+        Button(frame2, text="Guardar Vegetación",font=("Arial", 10), command= self.save_parcel_species, background=boton_color).grid(row=13, column=2, sticky=W, pady=2)
         
-        
-        
-        
-        Label(frame2, height=1, width=70, bg=main_color).grid(row=15, column=0, columnspan=3, pady=0, padx=2)
-        
-        
+        Label(frame2, height=0, width=70, bg=main_color).grid(row=15, column=0, columnspan=3, pady=1, padx=2)
         
         # parcelDescription ROW = 15 y 16
         Label(frame2, text="Descripción: ", font=("Arial", 12),  bg=main_color).grid(row=16, column=0, sticky=W, pady=2)
@@ -265,11 +289,11 @@ class MyButton(Button):
         self.parcelDescription_text.insert("1.0", self.parcelDescription)
         self.parcelDescription_text.grid(row=17, column=0, columnspan=3, pady=2)
         
-        Button(frame2, text="Guardar Descripción",font=("Arial", 11), command= self.save_parcel_description).grid(row=16, column=2, sticky=W, pady=2)
+        Button(frame2, text="Guardar Descripción",font=("Arial", 10), command= self.save_parcel_description,background=boton_color).grid(row=16, column=2, sticky=W, pady=2)
 
         
         # LINEA DE ESPACIO GRUESA
-        Label(frame2, height=3, width=0,bg=main_color).grid(row=18, column=0, columnspan=3, pady=3)
+        Label(frame2, height=2, width=0,bg=main_color).grid(row=18, column=0, columnspan=3, pady=0)
 
         # para poner " - " en restDays
         if self.isActive : self.restDays_label.config(text=" - ")
@@ -283,8 +307,8 @@ class MyButton(Button):
 # Crear instancia de Tkinter
 root = tk.Tk()
 
-# Crear los tres frames (secciones verticales)
 
+# Crear los tres frames (secciones verticales)
 frame1 = tk.Frame(root, bg=main_color)
 frame_buttons = tk.Frame(frame1, bg="red", width=3, height=700) # LINEA FINITA
 frame_parcel_add = tk.Frame(frame1, bg=main_color, width=350, height=150)
@@ -301,14 +325,6 @@ frame3.pack(side="right")
 frame2.columnconfigure(0, weight=150)
 frame2.columnconfigure(1, weight=200)
 frame2.columnconfigure(2, weight=150)
-
-
-
-# frame3 = tk.Frame(root, bg="blue", width=500, height=700)
-
-#frame_buttons.pack(side=LEFT)
-#frame_parcel_add.pack(side=LEFT, padx=20)
-#frame_parcel_button.pack(side=LEFT, padx=20)
 
 # Alinear los frames en una fila vertical
 
@@ -351,6 +367,7 @@ def create_buttons():
                                 width=btn_width)
 
         new_button.grid(row=row, column=col, padx=2, pady=2)
+
 
 def create_single_button():
     mi_comunicacion.crear_potrero_default()
@@ -396,10 +413,10 @@ def add_parcel_button_click():
 def delete_parcel_button_click():
     delete_last_button()
 
-create_button = tk.Button(frame_parcel_add, text="Agregar potrero", command=add_parcel_button_click)
+create_button = tk.Button(frame_parcel_add, text="Agregar potrero", command=add_parcel_button_click, background=boton_color)
 create_button.pack(side=LEFT, pady=7, padx=8)
 
-delete_button = tk.Button(frame_parcel_add, text="Eliminar último potrero", command=delete_parcel_button_click)
+delete_button = tk.Button(frame_parcel_add, text="Eliminar último potrero", command=delete_parcel_button_click, background=boton_color)
 delete_button.pack(side=LEFT, pady=7, padx=8)
 
 create_buttons()
