@@ -5,6 +5,9 @@
 # conexion.commit() # guarda bd
 # conexion.close() # cierra bd
 
+# def __init__(self, parcelNumber = None, parcelDescription = None, parcelSize = None, parcelSpecies = None,
+#              parcelStocking = None, parcelLastGrazingDate = None, restDays = None, isActive = None, grazinTime = None):
+
 from datetime import datetime
 import sqlite3
 from tkinter import *
@@ -32,17 +35,22 @@ class Comunication():
         
         # self.set_parcelDescription(2, "Descipcion actualizada") # FUNCIONA 
         # self.set_parcelSize(2, 5.2) # FUNCIONA
-        # self.set_isActive(2, True) # FUNCIONA
-        # self.set_parcelLastGrazingDate(4, datetime.now()) # FUNCIONA tiene que ser formato datetime
+        # self.set_isActive(1, True) # FUNCIONA
+        # self.set_parcelLastGrazingDate(1, datetime.now()) # FUNCIONA tiene que ser formato datetime
+        # self.set_parcelLastGrazingDate(3, datetime(2023, 2, 27, 11, 30, 15, 1234))
         # self.set_parcelSpecies(2, "Variadas con pasto miel") # FUNCIONA
         # self.set_parcelStocking(2, 25) # FUNCIONA
         # self.set_restDays(3, 12) # FUNCIONA
         # self.set_grazinTime(4, datetime.now()) # FUNCIONA        
         
+        # self.set_parcelStockingForAll(60) # FUNCIONA 
+        
         # self.get_parcel_numbers_and_status() # FUNCIONA  
         # self.get_all() # FUNCIONA  
+        # self.get_all_parcel_info(1)
         
         # self.rest_days_update() # FUNCIONA 
+        
 
 
 #### 
@@ -64,6 +72,26 @@ class Comunication():
             bd_2 = "UPDATE campo SET restDays = ? WHERE parcelNumber = ?"
             cursor.execute(bd_2, (restDays, parcelNumber))
             self.conexion.commit()
+            
+    
+    def set_parcelStockingForAll(self, parcelStocking):
+        print(parcelStocking)
+        cursor = self.conexion.cursor()
+        bd = "UPDATE campo SET parcelStocking = ?"
+        cursor.execute(bd, (parcelStocking,))
+        self.conexion.commit()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     # GENERAL FUNCTIONS
@@ -178,6 +206,14 @@ class Comunication():
         cursor = self.conexion.cursor()
         bd = "SELECT * FROM campo"
         cursor.execute(bd)
+        resultados = cursor.fetchall()
+        print("Resultado: ", resultados)
+        return resultados
+    
+    def get_all_parcel_info(self, parcelNumber):
+        cursor = self.conexion.cursor()
+        bd = "SELECT * FROM campo WHERE parcelNumber = ?"
+        cursor.execute(bd,(parcelNumber,))
         resultados = cursor.fetchall()
         print("Resultado: ", resultados)
         return resultados
