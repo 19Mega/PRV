@@ -5,9 +5,16 @@ import json
 class App(tk.Frame): # hereda de la clase Frame
     def __init__(self, master): # recibe el objeto master que seria la ventana principal
         super().__init__(master)
-        self.master = master 
+        
+        self.main_color = "#C6D8C2"
+        self.boton_color = "#F0F3ED"
+        
+        self.master = master
         self.pack()
-
+        
+        
+        self.master.configure(bg=self.main_color)
+        
         # creamos un widget con la funcion create_widgets()
         self.create_widgets() 
 
@@ -23,6 +30,8 @@ class App(tk.Frame): # hereda de la clase Frame
 
         # Intenta cargar los datos previos del archivo JSON
         self.load_data()
+        
+
 
         # hasta aca ejecuta cuando creamos un objeto del tipo app
         # despues tiene las funciones que se actival al interactuar con la ventana
@@ -36,23 +45,23 @@ class App(tk.Frame): # hereda de la clase Frame
         self.image = Image.open(image_path)
         self.photo_image = ImageTk.PhotoImage(self.image)
 
-        # Crea un canvas del mismo tamaÃÂ±o que la imagen
-        self.canvas = tk.Canvas(self, width=self.image.width, height=self.image.height)
+        # Crea un canvas del mismo tamaño que la imagen
+        self.canvas = tk.Canvas(self, width=self.image.width, height=self.image.height, bg= self.main_color)
         self.canvas.pack()
 
         # Pinta la imagen en el canvas
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo_image)
 
         # Crea botones para las dos opciones
-        self.line_button = tk.Button(self, text="Dibujar linea", command=self.set_mode_line)
-        self.number_button = tk.Button(self, text="Colocar numero", command=self.set_mode_number)
+        self.line_button = tk.Button(self, text="Dibujar linea", command=self.set_mode_line, background=self.boton_color)
+        self.number_button = tk.Button(self, text="Colocar numero", command=self.set_mode_number, background=self.boton_color)
         self.line_button.pack(side="left")
         self.number_button.pack(side="left")
 
-        self.borrar_numeros_button = tk.Button(self, text="Borrar numeros", command=self.borrar_numeros)
+        self.borrar_numeros_button = tk.Button(self, text="Borrar numeros", command=self.borrar_numeros, background=self.boton_color)
         self.borrar_numeros_button.pack(side="left")
 
-        self.borrar_lines_button = tk.Button(self, text="Borrar lineas", command=self.borrar_lines)
+        self.borrar_lines_button = tk.Button(self, text="Borrar lineas", command=self.borrar_lines, background=self.boton_color)
         self.borrar_lines_button.pack(side="left")
 
         # Vincula eventos del mouse en el canvas
@@ -86,7 +95,7 @@ class App(tk.Frame): # hereda de la clase Frame
 
             # Dibuja el numero en la capa "numbers"
                                 #   ubicacion, texto, color, tag del archivo json
-            self.canvas.create_text(x, y, text=str(self.next_number), fill='white', tags="numbers", font=("Arial", 11))
+            self.canvas.create_text(x, y, text=str(self.next_number), fill='white', tags="numbers", font=("Arial", 15))
             
             
             #test
@@ -169,12 +178,12 @@ class App(tk.Frame): # hereda de la clase Frame
                 self.next_number = len(self.number_positions)+1
 
                 # Dibuja los numeros previamente guardados en la capa "numbers"
-                self.canvas.create_text(0, 0, text="", tags="numbers", font=("Arial", 11))
+                self.canvas.create_text(0, 0, text="", tags="numbers", font=("Arial", 15))
 
                 # ACA AGREGA LOS NUMEROS, HAY QUE PINTAR UNO DE ROJO
                 numero_potrero = 1
                 for pos, i in zip(self.number_positions, range(self.next_number, len(self.number_positions)+self.next_number)):
-                    self.canvas.create_text(pos[0], pos[1], text=str(numero_potrero), fill='white', tags="numbers", font=("Arial", 11))
+                    self.canvas.create_text(pos[0], pos[1], text=str(numero_potrero), fill='white', tags="numbers", font=("Arial", 15))
                     numero_potrero +=1
 
                 # Dibuja las li­neas previamente guardados en la capa "lines"
@@ -229,8 +238,8 @@ class App(tk.Frame): # hereda de la clase Frame
 
 
     # if __name__ == '__main__':
-# root = tk.Tk()
-# app = App(root)
+#root = tk.Tk()
+#app = App(root)
 # app.mainloop()
 
 
