@@ -82,18 +82,6 @@ class Comunication():
         self.conexion.commit()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     # GENERAL FUNCTIONS
     
     def get_last_potrero_number(self): # FUNCIONA
