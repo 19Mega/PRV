@@ -317,9 +317,9 @@ frame_parcel_button = tk.Frame(frame1, bg=main_color, width=400, height=550)
 frame_prueba = tk.Frame(frame1, bg="blue", width=3, height=700)
 frame_prueba.pack(side="right") # LINEA FINITA
 
-frame2 = tk.Frame(root, bg=main_color, width=500, height=700) # INFO SCREEN
+frame2 = tk.Frame(root, width=500, height=700,bg=main_color) # INFO SCREEN
 
-frame3 = tk.Frame(root, bg="pink", width=0, height=0)
+frame3 = tk.Frame(root, width=0, height=0, bg=main_color)
 frame3.pack(side="right")
 
 frame2.columnconfigure(0, weight=150)
@@ -337,7 +337,9 @@ frame2.pack(side="left")
 #frame3.pack(side="left")
 
 # desactivar la posibilidad de cambiar el tamaño de la ventana
-root.resizable(width=False, height=False)
+root.resizable(width=True, height=True)
+root.configure(background=main_color)
+root.geometry("1400x700")
 
 def create_buttons():
     # Cambia el ancho del botón para que se ajuste a 3 botones por fila
@@ -424,6 +426,7 @@ create_buttons()
 
 app = App(frame3)
 app.pack()
+app.config(background=main_color, bg=main_color)
 
 # Mostrar la ventana
 root.mainloop()
