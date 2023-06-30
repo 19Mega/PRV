@@ -9,4 +9,4 @@ Características destacadas
 
 
  Interfaz principal del programa PRV.
-![Descripción de la imagen](images\PRV_main_image.PNG)
+![imagen](images/PRV_main_image.PNG)
