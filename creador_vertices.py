@@ -21,17 +21,10 @@ class Vertice:
         self.save_button = Button(root, text="Guardar", command=self.save_lines)
         self.save_button.pack()
         
-        # number
-        #self.state_number_button = "OFF"
-        #self.mode_number_button = Button(root, text=f"Editor de Numeros: ", command=self.toggle_number_mode)
-        #self.mode_number_button.pack()
-        
         self.canvas.bind("<Button-1>", self.start_line)
         self.canvas.bind("<B1-Motion>", self.draw_line)
         self.canvas.bind("<ButtonRelease-1>", self.stop_line)
         self.canvas.bind("<Button-3>", self.delete_line)
-        
-        
         
         # numbers
         self.count = 0
@@ -43,9 +36,6 @@ class Vertice:
             self.canvas.create_text(x, y, text=number, fill="white", font=("Arial", 14))
         
         
-        
-        #self.load_button = Button(root, text="Cargar", command=self.load_lines)
-        #self.load_button.pack()
         self.load_lines()
 
 
@@ -54,7 +44,6 @@ class Vertice:
         if os.path.isfile("numbers.json"):
             with open("numbers.json", "r") as f:
                 self.numbers = json.load(f)
-
 
     # lines
     def start_line(self, event):
@@ -104,8 +93,6 @@ class Vertice:
             self.mode_button.configure(bg='green', fg='white')
         self.mode_button.config(text=f"Editor de Potreros: {self.state_button}")
 
-
-    # number
     def toggle_number_mode(self):
         if self.number_mode == "number":
             self.number_mode = "no_number"
