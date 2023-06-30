@@ -4,8 +4,7 @@ from tkinter import messagebox
 from datetime import datetime
 
 from PRV_main_map_edit import App
-from conexion_sqlite import Comunication
-
+from PRV_sqlite_connection import Comunication
 
 mi_comunicacion = Comunication()
 mi_comunicacion.rest_days_update()
