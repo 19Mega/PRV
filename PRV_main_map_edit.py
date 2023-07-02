@@ -109,11 +109,9 @@ class App(tk.Frame):
         if self.mode == "line":
             x, y = event.x, event.y
 
-            # Si ya habia una linea, la borra
             if self.line:
                 self.canvas.delete("temp_line")
 
-            # Dibuja una nueva linea temporal de 10px en las coordenadas del clic y el drag
             temp_line = [(self.start_x, self.start_y), (x, y)]
             self.line = self.canvas.create_line(temp_line, fill='skyblue', width=3, tags=("lines", "temp_line"))
 
