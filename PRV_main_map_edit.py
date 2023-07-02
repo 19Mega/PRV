@@ -28,21 +28,16 @@ class App(tk.Frame):
 
 
     def create_widgets(self):
-        # Coloca la ruta de la imagen manualmente
         image_path = "02Git/captura.jpg"
 
-        # Carga la imagen con PIL y la convierte para poder mostrarla en el canvas
         self.image = Image.open(image_path)
         self.photo_image = ImageTk.PhotoImage(self.image)
 
-        # Crea un canvas del mismo tamaño que la imagen
         self.canvas = tk.Canvas(self, width=self.image.width, height=self.image.height, bg= self.main_color)
         self.canvas.pack()
 
-        # Pinta la imagen en el canvas
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo_image)
 
-        # Crea botones para las dos opciones
         self.line_button = tk.Button(self, text="Dibujar linea", command=self.set_mode_line, background=self.boton_color)
         self.number_button = tk.Button(self, text="Colocar numero", command=self.set_mode_number, background=self.boton_color)
         self.line_button.pack(side="left")
@@ -54,20 +49,19 @@ class App(tk.Frame):
         self.borrar_lines_button = tk.Button(self, text="Borrar lineas", command=self.borrar_lines, background=self.boton_color)
         self.borrar_lines_button.pack(side="left")
 
-        # Vincula eventos del mouse en el canvas
         self.canvas.bind("<Button-1>", self.canvas_left_click) # 
         self.canvas.bind("<ButtonRelease-1>", self.canvas_left_release)
         self.canvas.bind("<B1-Motion>", self.canvas_left_drag)
 
     def set_mode_line(self):
         self.mode = "line"
-        self.line_button.config(relief=tk.SUNKEN) # el boton queda apretado
-        self.number_button.config(relief=tk.RAISED) # boton levantado
+        self.line_button.config(relief=tk.SUNKEN)
+        self.number_button.config(relief=tk.RAISED) 
 
     def set_mode_number(self):
         self.mode = "number"
-        self.line_button.config(relief=tk.RAISED) # boton queda levantado
-        self.number_button.config(relief=tk.SUNKEN) # queda apretado
+        self.line_button.config(relief=tk.RAISED)
+        self.number_button.config(relief=tk.SUNKEN)
 
 
     #self.canvas.bind("<Button-1>", self.canvas_left_click) 
