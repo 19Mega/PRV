@@ -113,33 +113,26 @@ class App(tk.Frame): # hereda de la clase Frame
             # Obtiene las coordenadas del clic
             self.start_x, self.start_y = event.x, event.y
 
-    # self.canvas.bind("<ButtonRelease-1>", self.canvas_left_release)
+
     def canvas_left_release(self, event):
-        # Si se ha pulsado el boton de dibujar linea
         if self.mode == "line":
-            # Obtiene las coordenadas del release
+
             x, y = event.x, event.y
             draw = ImageDraw.Draw(self.image)
 
-            # Si ya habia una linea, la borra
             if self.line:
                 self.canvas.delete(self.line)
 
-            # Crea una nueva linea de 10px en las coordenadas del clic y release
             new_line = [(self.start_x, self.start_y), (x, y)]
             self.line = self.canvas.create_line(new_line, fill='white', width=3, tags="lines")
 
-            # Guarda la linea en la lista
             self.lines.append(new_line)
 
-            # Guarda los datos
+
             self.save_data()
 
-    # self.canvas.bind("<B1-Motion>", self.canvas_left_drag)
     def canvas_left_drag(self, event):
-        # Si se ha pulsado el boton de dibujar linea
         if self.mode == "line":
-            # Obtiene las coordenadas del drag
             x, y = event.x, event.y
 
             # Si ya habia una linea, la borra
@@ -153,7 +146,6 @@ class App(tk.Frame): # hereda de la clase Frame
 
     def load_data(self):
         try:
-            # Si hay un archivo JSON, carga los datos previos
             with open("data.json", "r") as f:
                 data = json.load(f)
 
