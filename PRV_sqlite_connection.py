@@ -1,13 +1,3 @@
-# conexion = sqlite3.connect('database.db') # Se utiliza para conectarse a una base de datos SQLite y devolver un objeto de conexión.
-# cursor = conexion.cursor() # permite usar el .execute('Query')
-# cursor.execute('SELECT * FROM tabla') # execute: Se utiliza para ejecutar comandos SQL en la base de datos.
-# resultados = cursor.fetchall() # Se utiliza para obtener todos los resultados de una consulta.
-# conexion.commit() # guarda bd
-# conexion.close() # cierra bd
-
-# def __init__(self, parcelNumber = None, parcelDescription = None, parcelSize = None, parcelSpecies = None,
-#              parcelStocking = None, parcelLastGrazingDate = None, restDays = None, isActive = None, grazinTime = None):
-
 from datetime import datetime
 import sqlite3
 from tkinter import *
