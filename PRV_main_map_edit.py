@@ -64,16 +64,11 @@ class App(tk.Frame):
         self.number_button.config(relief=tk.SUNKEN)
 
 
-    #self.canvas.bind("<Button-1>", self.canvas_left_click) 
-    def canvas_left_click(self, event):
-        # Si se ha pulsado el boton de colocar numero
-        if self.mode == "number":
-            # Obtiene las coordenadas del clic
-            x, y = event.x, event.y
-            draw = ImageDraw.Draw(self.image) # crea objeto que vamos a colocar sobre la imagen
 
-            #draw.text((x,y),)
-            # Crea un nuevo numero con el valor incremental
+    def canvas_left_click(self, event):
+        if self.mode == "number":
+            x, y = event.x, event.y
+            draw = ImageDraw.Draw(self.image)
             draw.text((x, y), str(self.next_number), fill='white') # le decimos al objeto que va ser un text
             self.number_positions.append((x, y))
 
@@ -87,13 +82,9 @@ class App(tk.Frame):
             print(self.number_positions)
 
             self.next_number += 1
-
-            # Guarda los datos
             self.save_data()
 
-        # Si se ha pulsado el boton de dibujar linea
         elif self.mode == "line":
-            # Obtiene las coordenadas del clic
             self.start_x, self.start_y = event.x, event.y
 
 
