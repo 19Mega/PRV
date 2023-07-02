@@ -150,21 +150,6 @@ class App(tk.Frame): # hereda de la clase Frame
             temp_line = [(self.start_x, self.start_y), (x, y)]
             self.line = self.canvas.create_line(temp_line, fill='skyblue', width=3, tags=("lines", "temp_line"))
 
-    # no se usa
-    def clear_canvas(self):
-        # Borra todas las linea y numeros del canvas y los listados internamente
-        self.canvas.delete("numbers")  # Borra todos los objetos de la capa "numbers"
-        self.number_positions = []
-        self.canvas.delete("lines")  # Borra todos los objetos de la capa "lines"
-        self.lines = []
-
-        # Actualiza la imagen del canvas con la imagen de fondo original
-        self.photo_image = ImageTk.PhotoImage(self.image)
-        self.canvas.delete("all")
-        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo_image)
-
-        # Guarda los datos vacios
-        self.save_data()
 
     def load_data(self):
         try:
@@ -195,19 +180,16 @@ class App(tk.Frame): # hereda de la clase Frame
             pass
 
     def save_data(self):
-        # Crea el diccionario para guardar la informacion
         data = {
             "numbers": self.number_positions,
             "lines": self.lines
         }
 
-        # Guarda los datos en un archivo JSON
         with open("data.json", "w") as f:
             json.dump(data, f)
 
 
     def borrar_numeros(self):
-        # Elimina solo los numeros del canvas y del archivo data.json
         self.canvas.delete("numbers")
         self.number_positions = []
 
@@ -222,7 +204,6 @@ class App(tk.Frame): # hereda de la clase Frame
         self.next_number = 1
 
     def borrar_lines(self):
-        # Elimina solo las lineas del canvas y del archivo data.json
         self.canvas.delete("lines")
         self.lines = []
 
