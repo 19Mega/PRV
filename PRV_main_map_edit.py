@@ -2,8 +2,8 @@ import tkinter as tk
 from PIL import Image, ImageTk, ImageDraw
 import json
 
-class App(tk.Frame): # hereda de la clase Frame
-    def __init__(self, master): # recibe el objeto master que seria la ventana principal
+class App(tk.Frame):
+    def __init__(self, master):
         super().__init__(master)
         
         self.main_color = "#C6D8C2"
@@ -12,26 +12,16 @@ class App(tk.Frame): # hereda de la clase Frame
         self.master = master
         self.pack()
         
-        
         self.master.configure(bg=self.main_color)
-        
-        # creamos un widget con la funcion create_widgets()
         self.create_widgets() 
 
-        # Inicializa variables para hacer numeros incrementales
         self.next_number = 1
         self.number_positions = []
 
-        # Inicializa variable para la linea que se esta dibujando
         self.line = None
-
-        # Inicializa la lista donde se guardaran las lineas
         self.lines = []
-
-        # Intenta cargar los datos previos del archivo JSON
         self.load_data()
         
-
 
         # hasta aca ejecuta cuando creamos un objeto del tipo app
         # despues tiene las funciones que se actival al interactuar con la ventana
@@ -96,7 +86,6 @@ class App(tk.Frame): # hereda de la clase Frame
             # Dibuja el numero en la capa "numbers"
                                 #   ubicacion, texto, color, tag del archivo json
             self.canvas.create_text(x, y, text=str(self.next_number), fill='white', tags="numbers", font=("Arial", 15))
-            
             
             #test
             total_de_numeros = len(self.number_positions)
