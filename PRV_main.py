@@ -17,7 +17,6 @@ boton_color = "#F0F3ED"
 #538C45 : Verde de botones
 #312f47 : Azul oscuro antiguo
 
-
 # ID, parcelNumber, parcelDescription, parcelSize, parcelSpecies, 
 # parcelStocking, parcelLastGrazingDate, restDays, isActive, grazinTime
 
