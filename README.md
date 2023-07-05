@@ -1,12 +1,10 @@
-# PRV-Pastoreo-Racional-Voisin
+# PRV Grazing Rational Voisin
+Desktop program to control breaks in Grazing Rational Voisin (PRV).
 
-Programa de escritorio para controlar los descansos en el Pastoreo Racional Voisin (PRV).   
+Outstanding features 
+• Manages and controls breaks in Grazing Rational Voisin efficiently. 
+• Provides an intuitive and easy-to-use interface to configure and monitor the PRV. 
+• Allows users to establish optimal rest times for grazing their cattle.
 
-Características destacadas
-• Gestiona y controla los descansos en el Pastoreo Racional Voisin de manera eficiente.
-• Proporciona una interfaz intuitiva y fácil de usar para configurar y monitorear el PRV.
-• Permite a los usuarios establecer tiempos de descanso óptimos para el pastoreo de su ganado.
-
-
- Interfaz principal del programa PRV.
+Main interface of the PRV program.
 ![imagen](images/PRV_main_image.PNG)
